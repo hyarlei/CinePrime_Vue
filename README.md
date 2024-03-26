@@ -1,4 +1,4 @@
-# :checkered_flag: CinePrime - Sistema de Gestão de Cinemas.
+# :checkered_flag: CinePrime - Sistema de Gestão de Cinemas
 
 O projeto CinePrime é uma aplicação destinada à gestão de cinemas, permitindo aos usuários realizar diversas operações relacionadas à exibição de filmes e venda de ingressos.
 
@@ -26,7 +26,7 @@ Liste as principais entidades do sistema.
 - Ticket
 - Employer
 
-## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
+## :triangular_flag_on_post:  Principais funcionalidades da aplicação
 
 - Cadastrar Filme: Permitir que o usuário cadastre um filme, informando o nome, o código, o gênero, a duração e a classificação indicativa.
 - Listar Filmes: Exibir uma lista com todos os filmes cadastrados, incluindo o gênero e a classificação indicativa.
@@ -49,9 +49,7 @@ Liste as principais entidades do sistema.
 
 Express e Node.js
 
-
 ## :shipit: Operações implementadas para cada entidade da aplicação
-
 
 | Entidade| Criação | Leitura | Atualização | Remoção |
 | --- | --- | --- | --- | --- |
