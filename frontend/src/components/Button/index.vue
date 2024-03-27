@@ -1,6 +1,6 @@
 <template>
-  <button :class="props.variant" @click="props.onClick" :type="props.type" :style="props.style">
-    {{ props.text }}
+  <button :class="variant" @click="onClick" :type="type" :style="style">
+    {{ text }}
   </button>
 </template>
 

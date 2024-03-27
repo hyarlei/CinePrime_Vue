@@ -9,11 +9,11 @@
 
 <script>
 
-import Button from "../../components/Button/index.vue";
+import Button from "../components/Button/index.vue";
 
 export default {
     components: {
-        Button
+        Button,
     },
     methods: {
         async handleSubmit() {
