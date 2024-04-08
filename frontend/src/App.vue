@@ -1,14 +1,29 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
+<template>
+  <div id="app">
+    <PageContainer>
+      <!-- <CinePrimeNavbar /> -->
+      <ContentContainer>
+        <router-view />
+      </ContentContainer>
+    </PageContainer>
+  </div>
+</template>
 
-import Home from './views/Home.vue';
+<script>
+import PageContainer from './components/PageContainer.vue';
+import ContentContainer from './components/ContentContainer.vue';
+// import CinePrimeNavbar from './components/CinePrimeNavbar.vue';
 
+export default {
+  name: 'App',
+  components: {
+    PageContainer,
+    ContentContainer,
+    // CinePrimeNavbar
+  }
+};
 </script>
 
-<template>
-  <header>
-
-  </header>
-
-  <RouterView />
-</template>
+<style scoped>
+/* Estilos opcionais podem ser adicionados aqui */
+</style>

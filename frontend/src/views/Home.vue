@@ -9,7 +9,7 @@
 
 <script>
 
-import Button from "../components/Button/index.vue";
+import Button from "../components/Button.vue";
 
 export default {
     components: {
