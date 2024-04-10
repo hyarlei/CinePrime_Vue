@@ -1,8 +1,8 @@
 <template>
-  <div class="form-group mb-3" :id="props.id">
-    <label>{{ props.label }}</label>
-    <input class="form-control" :placeholder="props.placeholder" :type="props.type" :value="props.value"
-      @input="props.onChange($event.target.value)" />
+  <div class="form-group mb-3" :id="id">
+    <label>{{ label }}</label>
+    <input class="form-control" :placeholder="placeholder" :type="type" :value="value"
+      @input="onChange($event.target.value)" />
   </div>
 </template>
 
@@ -20,8 +20,21 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos opcionais podem ser adicionados aqui */
 .form-group {
-  /* Estilos CSS da classe .form-group */
+  margin-bottom: 1.5rem;
 }
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group .form-control {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+/* Estilos opcionais podem ser adicionados aqui */
 </style>
