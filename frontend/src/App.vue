@@ -1,29 +1,29 @@
 <template>
   <div id="app">
-    <PageContainer>
-      <!-- <CinePrimeNavbar /> -->
-      <ContentContainer>
-        <router-view />
-      </ContentContainer>
-    </PageContainer>
+    <img alt="CinePrime logo" src="./assets/logo2.png">
+    <!-- Adicione o componente HomePage ao template -->
+    <HomePage />
   </div>
 </template>
 
 <script>
-import PageContainer from './components/PageContainer.vue';
-import ContentContainer from './components/ContentContainer.vue';
-// import CinePrimeNavbar from './components/CinePrimeNavbar.vue';
+import HomePage from './pages/Home/HomePage.vue';
 
 export default {
   name: 'App',
   components: {
-    PageContainer,
-    ContentContainer,
-    // CinePrimeNavbar
+    HomePage,
   }
-};
+}
 </script>
 
-<style scoped>
-/* Estilos opcionais podem ser adicionados aqui */
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 </style>
