@@ -1,20 +1,18 @@
 <template>
-  <div id="app">
-    <img alt="CinePrime logo" src="./assets/logo2.png">
-    <!-- Adicione o componente HomePage ao template -->
-    <HomePage />
-  </div>
+  <NavBar />
+  <router-view>
+  </router-view>
 </template>
 
 <script>
-import HomePage from './pages/Home/HomePage.vue';
+import NavBar from "./components/NavBar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HomePage,
-  }
-}
+    NavBar
+  },
+};
 </script>
 
 <style>
@@ -24,6 +22,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
 }
 </style>

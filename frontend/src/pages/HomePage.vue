@@ -3,22 +3,18 @@
     <h1>Bem vindo ao Cine Prime</h1>
     <p>A melhor plataforma de gerenciamento de cinemas da região!</p>
 
-    <Button variant="success" text="Sobre a equipe Cine Prime" @click="handleSubmit" />
+    <button @click="handleSubmit">Sobre a equipe Cine Prime</button>
   </div>
 </template>
 
 <script>
-import Button from '@/components/CustomButton.vue';
-
 export default {
-  components: {
-    Button
-  },
+  components: {},
   methods: {
     handleSubmit() {
       alert(`Hyarlei Silva Freitas - 542646\nAntonio Victor Cavalcante Rodrigues - 535739`);
-    }
-  }
+    },
+  },
 };
 </script>
 
