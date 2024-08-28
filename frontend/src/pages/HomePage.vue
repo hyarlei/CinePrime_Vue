@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
     <h1>Bem vindo ao Cine Prime</h1>
     <p>A melhor plataforma de gerenciamento de cinemas da região!</p>
 
@@ -12,12 +12,16 @@ export default {
   components: {},
   methods: {
     handleSubmit() {
-      alert(`Hyarlei Silva Freitas - 542646\nAntonio Victor Cavalcante Rodrigues - 535739`);
+      alert(
+        `Hyarlei Silva Freitas - 542646\nAntonio Victor Cavalcante Rodrigues - 535739`
+      );
     },
   },
 };
 </script>
 
 <style scoped>
-/* Seus estilos personalizados */
+.home {
+  height: calc(100% - 120px) ;
+}
 </style>

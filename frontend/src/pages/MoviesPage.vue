@@ -28,12 +28,13 @@ export default {
   methods: {
     async fetchMovies() {
       try {
-        const response = await apiClient.get(`popular`, {
+        const response = await apiClient.get(`/movie/popular`, {
           params: {
             api_key: API_KEY,
+            language: "pt-BR",
           },
         });
-        this.movies = response.data.results; 
+        this.movies = response.data.results;
       } catch (error) {
         console.error("Erro ao buscar filmes:", error);
       }
@@ -47,10 +48,10 @@ export default {
 
 <style scoped>
 .cards {
-  display: grid;
-  justify-items: center;
-  grid-template-columns: repeat(4, 1fr);
-  row-gap: 36px;
-  padding: 0 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 36px;
 }
 </style>

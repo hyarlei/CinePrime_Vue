@@ -1,11 +1,9 @@
 import axios from "axios";
-import { API_KEY } from "./config";
 
 const apiClient = axios.create({
-  baseURL: "https://api.themoviedb.org/3/movie/",
+  baseURL: "https://api.themoviedb.org/3",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${API_KEY}`,
   },
   timeout: 10000,
 });
