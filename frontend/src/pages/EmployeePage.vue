@@ -1,99 +1,144 @@
 <template>
-  <div class="employee-page">
+  <div class="employee-list">
     <h1>Funcionários</h1>
     <button class="btn" @click="addEmployee">Adicionar Novo Funcionário</button>
 
     <div v-if="showForm">
-      <form @submit.prevent="saveEmployee">
-        <input v-model="formEmployee.nome" placeholder="Nome" required />
-        <input v-model="formEmployee.email" placeholder="Email" required />
-        <input v-model="formEmployee.cpf" placeholder="CPF" required />
-        <input v-model="formEmployee.telefone" placeholder="Telefone" required />
-        <input v-model="formEmployee.password" placeholder="Senha" required type="password"/>
-        <button type="submit">{{ editMode ? 'Atualizar' : 'Salvar' }}</button>
-        <button type="button" @click="cancelEdit">Cancelar</button>
-      </form>
+      <EmployeeForm
+        :employee="currentEmployee"
+        :isEdit="isEdit"
+        @save="saveEmployee"
+        @cancel="cancelEdit"
+      />
     </div>
 
-    <EmployeeComponent
-      v-for="employee in employees"
-      :key="employee.id"
-      :employee="employee"
-      @edit-employee="editEmployee"
-      @delete-employee="deleteEmployee"
-    />
+    <div v-if="employees.length">
+      <div
+        v-for="employee in employees"
+        :key="employee.id"
+        class="employee-item"
+      >
+        <p><strong>Nome:</strong> {{ employee.nome }}</p>
+        <p><strong>Email:</strong> {{ employee.email }}</p>
+        <p><strong>CPF:</strong> {{ employee.cpf }}</p>
+        <p><strong>Telefone:</strong> {{ employee.telefone }}</p>
+        <div class="buttons">
+          <button class="edit" @click="editEmployee(employee)">Editar</button>
+          <button class="delete" @click="deleteEmployee(employee.id)">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <p>Não há funcionários cadastrados.</p>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import EmployeeComponent from '../components/EmployeeComponent.vue';
+import axios from "axios";
+import EmployeeForm from "../components/EmployeeForm.vue";
 
 export default {
   components: {
-    EmployeeComponent,
+    EmployeeForm,
   },
   data() {
     return {
       employees: [],
       showForm: false,
-      editMode: false,
-      formEmployee: {
+      isEdit: false,
+      currentEmployee: {
         id: null,
-        nome: '',
-        email: '',
-        cpf: '',
-        telefone: '',
-        password: '',
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        password: "",
       },
     };
   },
   methods: {
     async fetchEmployees() {
       try {
-        const response = await axios.get('http://localhost:3333/employees');
+        const response = await axios.get("http://localhost:3333/employees");
         this.employees = response.data;
       } catch (error) {
-        console.error('Erro ao buscar funcionários:', error.response ? error.response.data : error.message);
+        console.error(
+          "Erro ao buscar funcionários:",
+          error.response ? error.response.data : error.message
+        );
       }
     },
     addEmployee() {
       this.showForm = true;
-      this.editMode = false;
-      this.formEmployee = { id: null, nome: '', email: '', cpf: '', telefone: '', password: '' };
+      this.isEdit = false;
+      this.currentEmployee = {
+        id: null,
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        password: "",
+      };
     },
     editEmployee(employee) {
       this.showForm = true;
-      this.editMode = true;
-      this.formEmployee = { ...employee };
+      this.isEdit = true;
+      this.currentEmployee = { ...employee };
     },
-    async saveEmployee() {
+    async saveEmployee(employee) {
       try {
-        if (this.editMode) {
-          const response = await axios.put(`http://localhost:3333/employees/${this.formEmployee.id}`, this.formEmployee);
-          const index = this.employees.findIndex((e) => e.id === this.formEmployee.id);
+        if (this.isEdit) {
+          const response = await axios.put(
+            `http://localhost:3333/employees/${employee.id}`,
+            employee
+          );
+          const index = this.employees.findIndex((e) => e.id === employee.id);
           this.$set(this.employees, index, response.data);
         } else {
-          const response = await axios.post('http://localhost:3333/employees', this.formEmployee);
+          const response = await axios.post(
+            "http://localhost:3333/employees",
+            employee
+          );
           this.employees.push(response.data);
         }
         this.showForm = false;
-        this.formEmployee = { id: null, nome: '', email: '', cpf: '', telefone: '', password: '' };
+        this.resetCurrentEmployee();
       } catch (error) {
-        console.error('Erro ao salvar funcionário:', error.response ? error.response.data : error.message);
+        console.error(
+          "Erro ao salvar funcionário:",
+          error.response ? error.response.data : error.message
+        );
       }
     },
     async deleteEmployee(employeeId) {
       try {
         await axios.delete(`http://localhost:3333/employees/${employeeId}`);
-        this.employees = this.employees.filter((employee) => employee.id !== employeeId);
+        this.employees = this.employees.filter(
+          (employee) => employee.id !== employeeId
+        );
       } catch (error) {
-        console.error('Erro ao excluir funcionário:', error.response ? error.response.data : error.message);
+        console.error(
+          "Erro ao excluir funcionário:",
+          error.response ? error.response.data : error.message
+        );
       }
     },
     cancelEdit() {
       this.showForm = false;
-      this.formEmployee = { id: null, nome: '', email: '', cpf: '', telefone: '', password: '' };
+      this.resetCurrentEmployee();
+    },
+    resetCurrentEmployee() {
+      this.currentEmployee = {
+        id: null,
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        password: "",
+      };
     },
   },
   created() {
@@ -103,22 +148,16 @@ export default {
 </script>
 
 <style scoped>
-.employee-page {
+.employee-list {
+  height: calc(100% - 180px);
   padding: 20px;
 }
-
-.employee-page button {
-  margin-bottom: 20px;
-}
-
-.employee-page form {
-  margin-bottom: 20px;
-}
-
-.employee-page input {
-  display: block;
-  margin-bottom: 10px;
-  padding: 5px;
+.employee-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #f9f9f9;
 }
 
 .btn {
@@ -134,5 +173,35 @@ export default {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.edit {
+  background-color: #4caf50;
+  width: 72px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delete {
+  background-color: red;
+  width: 72px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
 </style>

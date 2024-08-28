@@ -93,7 +93,7 @@ export default {
         const index = this.sessions.findIndex((s) => s.id === session.id);
         this.$set(this.sessions, index, session);
       } else {
-        session.id = Date.now(); // Simple ID generation for demo purposes
+        session.id = Date.now();
         this.sessions.push(session);
       }
       this.cancelEdit();
@@ -110,7 +110,7 @@ export default {
 
 <style scoped>
 .session-list {
-  height: calc(100% - 120px);
+  height: 100%;
   padding: 20px;
 }
 .session-item {

@@ -22,6 +22,6 @@ export default {
 
 <style scoped>
 .home {
-  height: calc(100% - 120px) ;
+  height: calc(100% - 180px) ;
 }
 </style>
