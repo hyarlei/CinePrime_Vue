@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -37,12 +39,25 @@ export default {
     },
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (this.todosPreenchidos) {
-        alert("Login bem-sucedido!");
-        this.email = "";
-        this.senha = "";
-        this.mensagemErro = "";
+        try {
+          const response = await axios.post('http://localhost:3333/auth/login', {
+            email: this.email,
+            password: this.senha,
+          });
+
+          const token = response.data.token;
+
+          // Armazena o token em localStorage para usá-lo nas requisições futuras
+          localStorage.setItem('token', token);
+
+          // Redireciona o usuário para a página principal ou painel
+          this.$router.push('/dashboard');
+
+        } catch (error) {
+          this.mensagemErro = "Falha no login: " + (error.response?.data.message || error.message);
+        }
       } else {
         this.mensagemErro = "Por favor, preencha todos os campos.";
       }
@@ -50,6 +65,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .content {

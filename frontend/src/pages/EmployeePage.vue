@@ -9,7 +9,7 @@
         <input v-model="formEmployee.email" placeholder="Email" required />
         <input v-model="formEmployee.cpf" placeholder="CPF" required />
         <input v-model="formEmployee.telefone" placeholder="Telefone" required />
-        <input v-model="formEmployee.password" placeholder="Senha" required type="password"/>
+        <input v-model="formEmployee.password" placeholder="Senha" required type="password" />
         <button type="submit">{{ editMode ? 'Atualizar' : 'Salvar' }}</button>
         <button type="button" @click="cancelEdit">Cancelar</button>
       </form>
@@ -51,7 +51,12 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        const response = await axios.get('http://localhost:3333/employees');
+        const token = localStorage.getItem('token'); // Obtém o token de autenticação
+        const response = await axios.get('http://localhost:3333/employees', {
+          headers: {
+            'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho da requisição
+          }
+        });
         this.employees = response.data;
       } catch (error) {
         console.error('Erro ao buscar funcionários:', error.response ? error.response.data : error.message);
@@ -60,7 +65,14 @@ export default {
     addEmployee() {
       this.showForm = true;
       this.editMode = false;
-      this.formEmployee = { id: null, nome: '', email: '', cpf: '', telefone: '', password: '' };
+      this.formEmployee = {
+        id: null,
+        nome: '',
+        email: '',
+        cpf: '',
+        telefone: '',
+        password: '',
+      };
     },
     editEmployee(employee) {
       this.showForm = true;
@@ -69,12 +81,21 @@ export default {
     },
     async saveEmployee() {
       try {
+        const token = localStorage.getItem('token'); // Obtém o token de autenticação
         if (this.editMode) {
-          const response = await axios.put(`http://localhost:3333/employees/${this.formEmployee.id}`, this.formEmployee);
+          const response = await axios.put(`http://localhost:3333/employees/${this.formEmployee.id}`, this.formEmployee, {
+            headers: {
+              'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho da requisição
+            }
+          });
           const index = this.employees.findIndex((e) => e.id === this.formEmployee.id);
           this.$set(this.employees, index, response.data);
         } else {
-          const response = await axios.post('http://localhost:3333/employees', this.formEmployee);
+          const response = await axios.post('http://localhost:3333/employees', this.formEmployee, {
+            headers: {
+              'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho da requisição
+            }
+          });
           this.employees.push(response.data);
         }
         this.showForm = false;
@@ -85,7 +106,12 @@ export default {
     },
     async deleteEmployee(employeeId) {
       try {
-        await axios.delete(`http://localhost:3333/employees/${employeeId}`);
+        const token = localStorage.getItem('token'); // Obtém o token de autenticação
+        await axios.delete(`http://localhost:3333/employees/${employeeId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho da requisição
+          }
+        });
         this.employees = this.employees.filter((employee) => employee.id !== employeeId);
       } catch (error) {
         console.error('Erro ao excluir funcionário:', error.response ? error.response.data : error.message);
@@ -93,7 +119,14 @@ export default {
     },
     cancelEdit() {
       this.showForm = false;
-      this.formEmployee = { id: null, nome: '', email: '', cpf: '', telefone: '', password: '' };
+      this.formEmployee = {
+        id: null,
+        nome: '',
+        email: '',
+        cpf: '',
+        telefone: '',
+        password: '',
+      };
     },
   },
   created() {
