@@ -1,43 +1,40 @@
 <template>
-  <div class="cinema-rooms">
-    <h1>Salas de Cinema Disponíveis</h1>
-    <button class="btn" @click="addRoom">Adicionar Nova Sala</button>
-
+  <div class="room-list">
+    <h1>Salas de Cinema</h1>
+    <button class="btn" @click="addRoom">Adicionar Sala</button>
     <div v-if="showForm">
-      <form @submit.prevent="saveRoom">
-        <input v-model="formRoom.name" placeholder="Nome da Sala" required />
-        <input
-          v-model.number="formRoom.capacity"
-          type="number"
-          placeholder="Capacidade"
-          required
-        />
-        <input
-          v-model="formRoom.hours"
-          placeholder="Horário de Funcionamento"
-          required
-        />
-        <button type="submit">{{ editMode ? "Atualizar" : "Salvar" }}</button>
-        <button type="button" @click="cancelEdit">Cancelar</button>
-      </form>
+      <RoomForm
+        :room="currentRoom"
+        :isEdit="isEdit"
+        @save="saveRoom"
+        @cancel="cancelEdit"
+      />
     </div>
-
-    <Room
-      v-for="room in rooms"
-      :key="room.id"
-      :room="room"
-      @edit-room="editRoom"
-      @delete-room="deleteRoom"
-    />
+    <div v-if="rooms.length">
+      <div v-for="room in rooms" :key="room.id" class="room-item">
+        <p><strong>Nome:</strong> {{ room.name }}</p>
+        <p><strong>Capacidade:</strong> {{ room.capacity }} lugares</p>
+        <p><strong>Horário:</strong> {{ room.hours }}</p>
+        <div class="buttons">
+          <button class="edit" @click="editRoom(room)">Editar</button>
+          <button class="delete" @click="deleteRoom(room.id)">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <p>Não há salas disponíveis.</p>
+    </div>
   </div>
 </template>
 
 <script>
-import Room from "../components/RoomComponent.vue";
+import RoomForm from "../components/RoomForm.vue";
 
 export default {
   components: {
-    Room,
+    RoomForm,
   },
   data() {
     return {
@@ -47,8 +44,8 @@ export default {
         { id: 3, name: "Sala 3", capacity: 120, hours: "11:00 - 21:00" },
       ],
       showForm: false,
-      editMode: false,
-      formRoom: {
+      isEdit: false,
+      currentRoom: {
         id: null,
         name: "",
         capacity: 0,
@@ -59,53 +56,50 @@ export default {
   methods: {
     addRoom() {
       this.showForm = true;
-      this.editMode = false;
-      this.formRoom = { id: null, name: "", capacity: 0, hours: "" };
+      this.isEdit = false;
+      this.currentRoom = {
+        id: null,
+        name: "",
+        capacity: 0,
+        hours: "",
+      };
     },
     editRoom(room) {
       this.showForm = true;
-      this.editMode = true;
-      this.formRoom = { ...room };
+      this.isEdit = true;
+      this.currentRoom = { ...room };
     },
-    saveRoom() {
-      if (this.editMode) {
-        const index = this.rooms.findIndex((r) => r.id === this.formRoom.id);
-        this.$set(this.rooms, index, this.formRoom);
+    saveRoom(room) {
+      if (this.isEdit) {
+        const index = this.rooms.findIndex((r) => r.id === room.id);
+        this.$set(this.rooms, index, room);
       } else {
-        this.formRoom.id = Date.now(); // Geração simples de ID
-        this.rooms.push({ ...this.formRoom });
+        room.id = Date.now();
+        this.rooms.push(room);
       }
-      this.showForm = false;
-      this.formRoom = { id: null, name: "", capacity: 0, hours: "" };
+      this.cancelEdit();
     },
-    deleteRoom(roomId) {
-      this.rooms = this.rooms.filter((room) => room.id !== roomId);
+    deleteRoom(id) {
+      this.rooms = this.rooms.filter((r) => r.id !== id);
     },
     cancelEdit() {
       this.showForm = false;
-      this.formRoom = { id: null, name: "", capacity: 0, hours: "" };
     },
   },
 };
 </script>
 
 <style scoped>
-.cinema-rooms {
+.room-list {
   padding: 20px;
+  height: 100%;
 }
-
-.cinema-rooms button {
-  margin-bottom: 20px;
-}
-
-.cinema-rooms form {
-  margin-bottom: 20px;
-}
-
-.cinema-rooms input {
-  display: block;
-  margin-bottom: 10px;
-  padding: 5px;
+.room-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #f9f9f9;
 }
 
 .btn {
@@ -121,5 +115,35 @@ export default {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.edit {
+  background-color: #4caf50;
+  width: 72px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delete {
+  background-color: red;
+  width: 72px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
 </style>

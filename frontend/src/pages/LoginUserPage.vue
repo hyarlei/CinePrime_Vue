@@ -70,7 +70,7 @@ export default {
 <style scoped>
 .content {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 180px);
   display: flex;
   flex-direction: column;
   justify-content: center;

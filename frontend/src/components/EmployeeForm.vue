@@ -1,0 +1,96 @@
+<template>
+  <div class="employee-form">
+    <h2>{{ isEdit ? "Editar Funcionário" : "Adicionar Funcionário" }}</h2>
+    <form @submit.prevent="submitForm">
+      <div>
+        <label for="nome">Nome:</label>
+        <input v-model="localEmployee.nome" type="text" required />
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input v-model="localEmployee.email" type="email" required />
+      </div>
+      <div>
+        <label for="cpf">CPF:</label>
+        <input maxlength="14" minlength="14"
+          v-model="localEmployee.cpf"
+          placeholder="CPF"
+          required
+          @input="applyCpfMask"
+        />
+      </div>
+      <div>
+        <label for="telefone">Telefone:</label>
+        <input v-model="localEmployee.telefone" type="text" required />
+      </div>
+      <div>
+        <label for="password">Senha:</label>
+        <input v-model="localEmployee.password" type="password" required />
+      </div>
+      <button type="submit">{{ isEdit ? "Atualizar" : "Salvar" }}</button>
+      <button type="button" @click="$emit('cancel')">Cancelar</button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    employee: {
+      type: Object,
+      default: () => ({
+        id: null,
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        password: "",
+      }),
+    },
+    isEdit: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      localEmployee: { ...this.employee },
+    };
+  },
+  watch: {
+    employee: {
+      handler(newEmployee) {
+        this.localEmployee = { ...newEmployee };
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    submitForm() {
+      this.$emit("save", this.localEmployee);
+    },
+    applyCpfMask() {
+      const value = this.localEmployee.cpf.replace(/\D/g, '');
+      this.localEmployee.cpf = value
+        .replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
+        .substring(0, 14);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.employee-form {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+form div {
+  margin-bottom: 12px;
+}
+button {
+  margin-right: 8px;
+}
+</style>
