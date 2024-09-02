@@ -7,7 +7,6 @@ import _auth from "../middleware/_auth";
 
 import authRouter from './auth.routes';
 import employeeRouter from "./employee.routes";
-import moviesRouter from "./movies.routes";
 import roomsRouter from "./room.routes";
 import sessionsRouter from "./session.routes";
 import ticketRouter from "./ticket.routes";
@@ -28,7 +27,6 @@ routes.use('/room', roomsRouter);
 routes.use('/employee', employeeRouter);
 
 //Rotas Movies
-routes.use("/movie", moviesRouter);
 
 // rotas session
 routes.use("/session", sessionsRouter);

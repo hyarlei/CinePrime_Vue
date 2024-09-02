@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
@@ -8,14 +8,13 @@ interface ISession {
     exibitionType: string;
     dublingType: string;
     idRoom: number;
-    idMovie: number;
     atualTicketsQtd: number;
     maxTicketsQtd: number;
 }
 
 export class CreateSessionService {
-    async execute({ dateTime, exibitionType, dublingType, idMovie, idRoom, atualTicketsQtd, maxTicketsQtd }: ISession, req: Request, res: Response) {
-        if (!dateTime || !exibitionType || !dublingType || idMovie === undefined || idRoom === undefined || atualTicketsQtd === undefined || maxTicketsQtd === undefined) {
+    async execute({ dateTime, exibitionType, dublingType, idRoom, atualTicketsQtd, maxTicketsQtd }: ISession, req: Request, res: Response) {
+        if (!dateTime || !exibitionType || !dublingType || idRoom === undefined || atualTicketsQtd === undefined || maxTicketsQtd === undefined) {
             return res.status(400).json({ message: 'Preencha todos os campos' });
         }
         if (atualTicketsQtd > maxTicketsQtd) {
@@ -23,27 +22,19 @@ export class CreateSessionService {
         }
 
         try {
-            const [movieExists, roomExists] = await Promise.all([
-                prisma.movie.findUnique({
-                    where: { id: idMovie },
-                }),
-                prisma.room.findUnique({
-                    where: { id: idRoom },
-                }),
-            ]);
+            const roomExists = await prisma.room.findUnique({
+                where: { id: idRoom },
+            });
 
-            if (!movieExists) {
-                return res.status(400).json({ message: 'Filme não existe' });
-            }
             if (!roomExists) {
                 return res.status(400).json({ message: 'Sala não existe' });
             }
-            let session = await prisma.session.create({
+
+            const session = await prisma.session.create({
                 data: {
                     dateTime,
                     exibitionType,
                     dublingType,
-                    idMovie,
                     idRoom,
                     atualTicketsQtd,
                     maxTicketsQtd,
