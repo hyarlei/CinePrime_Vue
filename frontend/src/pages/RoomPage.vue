@@ -12,14 +12,12 @@
     </div>
     <div v-if="rooms.length">
       <div v-for="room in rooms" :key="room.id" class="room-item">
-        <p><strong>Nome:</strong> {{ room.name }}</p>
-        <p><strong>Capacidade:</strong> {{ room.capacity }} lugares</p>
-        <p><strong>Horário:</strong> {{ room.hours }}</p>
+        <p><strong>Nome: Sala</strong> {{ room.id }}</p>
+        <p><strong>Capacidade:</strong> {{ room.qtd_max }} lugares</p>
+        <p><strong>Tipo de exibição:</strong> {{ room.typeExhibitionAccepted }}</p>
         <div class="buttons">
           <button class="edit" @click="editRoom(room)">Editar</button>
-          <button class="delete" @click="deleteRoom(room.id)">
-            Excluir
-          </button>
+          <button class="delete" @click="deleteRoom(room.id)">Excluir</button>
         </div>
       </div>
     </div>
@@ -30,6 +28,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import RoomForm from "../components/RoomForm.vue";
 
 export default {
@@ -38,30 +37,35 @@ export default {
   },
   data() {
     return {
-      rooms: [
-        { id: 1, name: "Sala 1", capacity: 100, hours: "10:00 - 22:00" },
-        { id: 2, name: "Sala 2", capacity: 80, hours: "12:00 - 23:00" },
-        { id: 3, name: "Sala 3", capacity: 120, hours: "11:00 - 21:00" },
-      ],
+      rooms: [],
       showForm: false,
       isEdit: false,
       currentRoom: {
-        id: null,
-        name: "",
-        capacity: 0,
-        hours: "",
+        // id: null,
+        qtd_max: 0,
+        typeExhibitionAccepted: '',
       },
     };
   },
+  created() {
+    this.fetchRooms();
+  },
   methods: {
+    async fetchRooms() {
+      try {
+        const response = await axios.get('http://localhost:3333/room');
+        this.rooms = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar salas:", error);
+      }
+    },
     addRoom() {
       this.showForm = true;
       this.isEdit = false;
       this.currentRoom = {
-        id: null,
-        name: "",
-        capacity: 0,
-        hours: "",
+        // id: null,
+        qtd_max: 0,
+        typeExhibitionAccepted: '',
       };
     },
     editRoom(room) {
@@ -69,18 +73,29 @@ export default {
       this.isEdit = true;
       this.currentRoom = { ...room };
     },
-    saveRoom(room) {
-      if (this.isEdit) {
-        const index = this.rooms.findIndex((r) => r.id === room.id);
-        this.$set(this.rooms, index, room);
-      } else {
-        room.id = Date.now();
-        this.rooms.push(room);
+    async saveRoom(room) {
+      try {
+        if (this.isEdit) {
+          // Atualizar sala
+          await axios.put(`http://localhost:3333/room/${room.id}`, room);
+        } else {
+          // Criar nova sala
+          const response = await axios.post('http://localhost:3333/room', room);
+          this.rooms.push(response.data);
+        }
+        this.cancelEdit();
+        this.fetchRooms(); // Atualiza a lista de salas
+      } catch (error) {
+        console.error("Erro ao salvar sala:", error);
       }
-      this.cancelEdit();
     },
-    deleteRoom(id) {
-      this.rooms = this.rooms.filter((r) => r.id !== id);
+    async deleteRoom(id) {
+      try {
+        await axios.delete(`http://localhost:3333/room/${id}`);
+        this.fetchRooms(); // Atualiza a lista de salas após a exclusão
+      } catch (error) {
+        console.error("Erro ao excluir sala:", error);
+      }
     },
     cancelEdit() {
       this.showForm = false;
