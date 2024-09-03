@@ -12,7 +12,9 @@
       </div>
       <div>
         <label for="cpf">CPF:</label>
-        <input maxlength="14" minlength="14"
+        <input
+          maxlength="14"
+          minlength="14"
           v-model="localEmployee.cpf"
           placeholder="CPF"
           required
@@ -21,7 +23,13 @@
       </div>
       <div>
         <label for="telefone">Telefone:</label>
-        <input v-model="localEmployee.telefone" type="text" required />
+        <input
+          v-model="localEmployee.telefone"
+          @input="formatarTelefone"
+          type="text"
+          id="telefone"
+          required
+        />
       </div>
       <div>
         <label for="password">Senha:</label>
@@ -70,10 +78,20 @@ export default {
       this.$emit("save", this.localEmployee);
     },
     applyCpfMask() {
-      const value = this.localEmployee.cpf.replace(/\D/g, '');
+      const value = this.localEmployee.cpf.replace(/\D/g, "");
       this.localEmployee.cpf = value
-        .replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')
+        .replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4")
         .substring(0, 14);
+    },
+    formatarTelefone() {
+      let telefone = this.telefone.replace(/\D/g, "");
+      if (telefone.length > 0) {
+        telefone = telefone.replace(/^(\d{2})(\d)/g, "($1) $2");
+      }
+      if (telefone.length > 9) {
+        telefone = telefone.replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+      }
+      this.telefone = telefone;
     },
   },
 };

@@ -16,7 +16,13 @@
 
         <div class="form-group">
           <label for="telefone">Telefone:</label>
-          <input type="text" id="telefone" v-model="telefone" required />
+          <input
+            type="text"
+            id="telefone"
+            v-model="telefone"
+            @input="formatarTelefone"
+            required
+          />
         </div>
 
         <div class="form-group">
@@ -31,7 +37,12 @@
 
         <div class="form-group">
           <label for="confirmarSenha">Confirmar Senha:</label>
-          <input type="password" id="confirmarSenha" v-model="confirmarSenha" required />
+          <input
+            type="password"
+            id="confirmarSenha"
+            v-model="confirmarSenha"
+            required
+          />
         </div>
 
         <button type="submit" :disabled="!todosPreenchidos">Enviar</button>
@@ -43,7 +54,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -78,6 +89,16 @@ export default {
       this.mensagemErro = "";
       return true;
     },
+    formatarTelefone() {
+      let telefone = this.telefone.replace(/\D/g, "");
+      if (telefone.length > 0) {
+        telefone = telefone.replace(/^(\d{2})(\d)/g, "($1) $2");
+      }
+      if (telefone.length > 9) {
+        telefone = telefone.replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+      }
+      this.telefone = telefone;
+    },
     async submitForm() {
       if (this.validarSenhas() && this.todosPreenchidos) {
         try {
@@ -89,10 +110,13 @@ export default {
             password: this.senha,
           };
           console.log("Enviando dados:", userData); // Verifique os dados antes de enviar
-          const response = await axios.post('http://localhost:3333/user', userData);
+          const response = await axios.post(
+            "http://localhost:3333/user",
+            userData
+          );
 
           if (response.status === 201) {
-            alert('Usuário cadastrado com sucesso!');
+            alert("Usuário cadastrado com sucesso!");
             // Limpar o formulário
             this.nome = "";
             this.cpf = "";
@@ -106,10 +130,15 @@ export default {
           }
         } catch (error) {
           console.error("Erro na requisição:", error.response); // Verifique a resposta do erro
-          if (error.response && error.response.data && error.response.data.message) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
             this.mensagemErro = error.response.data.message;
           } else {
-            this.mensagemErro = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
+            this.mensagemErro =
+              "Erro ao cadastrar usuário. Tente novamente mais tarde.";
           }
         }
       } else {
@@ -119,8 +148,7 @@ export default {
           alert("Por favor, corrija os erros no formulário.");
         }
       }
-    }
-
+    },
   },
 };
 </script>
