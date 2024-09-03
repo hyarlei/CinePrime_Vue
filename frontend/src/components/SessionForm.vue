@@ -44,7 +44,7 @@ export default {
     rooms: {
       type: Array,
       default: () => [],
-    }
+    },
   },
   data() {
     return {

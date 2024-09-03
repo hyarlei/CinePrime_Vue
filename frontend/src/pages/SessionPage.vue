@@ -32,7 +32,12 @@
 
 <script>
 import SessionForm from "../components/SessionForm.vue";
-import { fetchPopularMovies } from "../service/movieService";
+import {
+  createSession,
+  deleteSession,
+  fetchSessions,
+  updateSession
+} from "../service/sessionService";
 
 export default {
   components: {
@@ -42,11 +47,7 @@ export default {
     return {
       sessions: [],
       movies: [],
-      rooms: [
-        { id: 1, name: "Sala 1", capacity: 100, hours: "10:00 - 22:00" },
-        { id: 2, name: "Sala 2", capacity: 80, hours: "12:00 - 23:00" },
-        { id: 3, name: "Sala 3", capacity: 120, hours: "11:00 - 21:00" },
-      ],
+      rooms: [],
       showForm: false,
       isEdit: false,
       currentSession: {
@@ -58,13 +59,16 @@ export default {
     };
   },
   async created() {
-    try {
-      this.movies = await fetchPopularMovies();
-    } catch (error) {
-      console.error("Erro ao carregar filmes:", error);
-    }
+    await this.loadSessions();
   },
   methods: {
+    async loadSessions() {
+      try {
+        this.sessions = await fetchSessions();
+      } catch (error) {
+        console.error("Erro ao carregar sessões:", error);
+      }
+    },
     getMovieTitle(movieId) {
       const movie = this.movies.find((m) => m.id === movieId);
       return movie ? movie.title : "Desconhecido";
@@ -83,23 +87,26 @@ export default {
         time: "",
       };
     },
-    editSession(session) {
-      this.showForm = true;
-      this.isEdit = true;
-      this.currentSession = { ...session };
-    },
-    saveSession(session) {
-      if (this.isEdit) {
-        const index = this.sessions.findIndex((s) => s.id === session.id);
-        this.$set(this.sessions, index, session);
-      } else {
-        session.id = Date.now();
-        this.sessions.push(session);
+    async saveSession(session) {
+      try {
+        if (this.isEdit) {
+          await updateSession(session.id, session);
+        } else {
+          await createSession(session);
+        }
+        await this.loadSessions();
+        this.cancelEdit();
+      } catch (error) {
+        console.error("Erro ao salvar sessão:", error);
       }
-      this.cancelEdit();
     },
-    deleteSession(id) {
-      this.sessions = this.sessions.filter((s) => s.id !== id);
+    async deleteSession(id) {
+      try {
+        await deleteSession(id);
+        await this.loadSessions();
+      } catch (error) {
+        console.error("Erro ao excluir sessão:", error);
+      }
     },
     cancelEdit() {
       this.showForm = false;
@@ -142,7 +149,6 @@ export default {
   align-items: center;
   flex-direction: row;
   gap: 8px;
- 
 }
 
 .edit {
@@ -153,17 +159,24 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
 }
 
 .delete {
-  background-color: red;
+  background-color: #f44336;
   width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
 }
+
+.delete:hover {
+  background-color: #d32f2f;
+}
+
+.edit:hover {
+  background-color: #388e3c;
+}
+
 </style>
