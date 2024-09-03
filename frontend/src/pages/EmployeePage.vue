@@ -62,7 +62,7 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        const response = await axios.get("http://localhost:3333/employees");
+        const response = await axios.get("http://localhost:3333/employee");
         this.employees = response.data;
       } catch (error) {
         console.error(
@@ -92,14 +92,14 @@ export default {
       try {
         if (this.isEdit) {
           const response = await axios.put(
-            `http://localhost:3333/employees/${employee.id}`,
+            `http://localhost:3333/employee/${employee.id}`,
             employee
           );
           const index = this.employees.findIndex((e) => e.id === employee.id);
           this.$set(this.employees, index, response.data);
         } else {
           const response = await axios.post(
-            "http://localhost:3333/employees",
+            "http://localhost:3333/employee",
             employee
           );
           this.employees.push(response.data);
@@ -115,7 +115,7 @@ export default {
     },
     async deleteEmployee(employeeId) {
       try {
-        await axios.delete(`http://localhost:3333/employees/${employeeId}`);
+        await axios.delete(`http://localhost:3333/employee/${employeeId}`);
         this.employees = this.employees.filter(
           (employee) => employee.id !== employeeId
         );
