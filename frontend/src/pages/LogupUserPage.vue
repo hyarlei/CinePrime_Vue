@@ -89,7 +89,7 @@ export default {
             password: this.senha,
           };
           console.log("Enviando dados:", userData); // Verifique os dados antes de enviar
-          const response = await axios.post('http://localhost:3333/users', userData);
+          const response = await axios.post('http://localhost:3333/user', userData);
 
           if (response.status === 201) {
             alert('Usuário cadastrado com sucesso!');
