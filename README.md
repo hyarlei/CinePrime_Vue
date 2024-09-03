@@ -28,8 +28,7 @@ Liste as principais entidades do sistema.
 
 ## :triangular_flag_on_post:  Principais funcionalidades da aplicação
 
-- Cadastrar Filme: Permitir que o usuário cadastre um filme, informando o nome, o código, o gênero, a duração e a classificação indicativa.
-- Listar Filmes: Exibir uma lista com todos os filmes cadastrados, incluindo o gênero e a classificação indicativa.
+- Listar Filmes: Exibir uma lista com todos os filmes, incluindo o gênero e a classificação indicativa.
 - Cadastrar Sessão: Permitir que o usuário cadastre uma sessão para um filme, informando o horário, a quantidade de ingressos disponíveis e o valor do ingresso.
 - Listar Sessões Disponíveis: Exibir uma lista com todas as sessões disponíveis, incluindo o filme, o horário, a quantidade de ingressos disponíveis e o valor do ingresso.
 - Comprar Ingresso: Permitir que o comprador selecione uma sessão e compre um ou mais ingressos para essa sessão, informando seus dados pessoais (nome, CPF, telefone e e-mail) e finalizando a compra. Ao finalizar a compra, a quantidade de ingressos disponíveis para a sessão deve ser atualizada e o ingresso deve ser adicionado à lista de ingressos do comprador.
@@ -42,7 +41,7 @@ Liste as principais entidades do sistema.
 
 **Frontend:**
 
-- VueJS v3.0, Vue-Router e Pinia.
+- VueJS v3.0, Vue-Router.
 - Axios
 
 **Backend:**
@@ -54,7 +53,7 @@ Express e Node.js
 | Entidade| Criação | Leitura | Atualização | Remoção |
 | --- | --- | --- | --- | --- |
 | User     |  X  |  X  |  X  |  X  |
-| Movie    |  X  |  X  |  X  |  X  |
+| Movie    |     |  X  |     |     |
 | Session  |  X  |  X  |  X  |  X  |
 | Room     |  X  |  X  |  X  |  X  |
 | Ticket   |  X  |  X  |  X  |  X  |
@@ -71,12 +70,6 @@ Express e Node.js
 | POST | /user |
 | PUT | /user/{id} |
 | DELETE | /user/{id} |
-| --- | --- |
-| GET | /movie |
-| GET | /movie/{id} |
-| POST | /movie |
-| PUT | /movie/{id} |
-| DELETE | /movie/{id} |
 | --- | --- |
 | GET | /session |
 | GET | /session/{id} |

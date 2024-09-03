@@ -53,7 +53,7 @@ export default {
           localStorage.setItem('token', token);
 
           // Redireciona o usuário para a página principal ou painel
-          this.$router.push('/dashboard');
+          this.$router.push('/');
 
         } catch (error) {
           this.mensagemErro = "Falha no login: " + (error.response?.data.message || error.message);
