@@ -128,7 +128,8 @@ export default {
 <style scoped>
 .content {
   width: 100%;
-  height: calc(100% - 180px);
+  height: auto;
+  min-height: calc(100% - 180px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,7 +142,6 @@ export default {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 10%);
   width: 300px;
-  height: 408px;
   text-align: center;
 }
 
