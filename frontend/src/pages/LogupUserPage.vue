@@ -3,28 +3,39 @@
     <div class="form-container">
       <form @submit.prevent="submitForm" novalidate>
         <h2>Cadastro de Usuário</h2>
+
         <div class="form-group">
           <label for="nome">Nome:</label>
           <input type="text" id="nome" v-model="nome" required />
         </div>
+
+        <div class="form-group">
+          <label for="cpf">CPF:</label>
+          <input type="text" id="cpf" v-model="cpf" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="text" id="telefone" v-model="telefone" required />
+        </div>
+
         <div class="form-group">
           <label for="email">E-mail:</label>
           <input type="email" id="email" v-model="email" required />
         </div>
+
         <div class="form-group">
           <label for="senha">Senha:</label>
           <input type="password" id="senha" v-model="senha" required />
         </div>
+
         <div class="form-group">
           <label for="confirmarSenha">Confirmar Senha:</label>
-          <input
-            type="password"
-            id="confirmarSenha"
-            v-model="confirmarSenha"
-            required
-          />
+          <input type="password" id="confirmarSenha" v-model="confirmarSenha" required />
         </div>
+
         <button type="submit" :disabled="!todosPreenchidos">Enviar</button>
+
         <div v-if="mensagemErro" class="erro">{{ mensagemErro }}</div>
       </form>
     </div>
@@ -32,10 +43,14 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       nome: "",
+      cpf: "",
+      telefone: "",
       email: "",
       senha: "",
       confirmarSenha: "",
@@ -46,6 +61,8 @@ export default {
     todosPreenchidos() {
       return (
         this.nome.trim() !== "" &&
+        this.cpf.trim() !== "" &&
+        this.telefone.trim() !== "" &&
         this.email.trim() !== "" &&
         this.senha.trim() !== "" &&
         this.confirmarSenha.trim() !== ""
@@ -61,14 +78,40 @@ export default {
       this.mensagemErro = "";
       return true;
     },
-    submitForm() {
+    async submitForm() {
       if (this.validarSenhas() && this.todosPreenchidos) {
-        alert("Formulário enviado com sucesso!");
-        this.nome = "";
-        this.email = "";
-        this.senha = "";
-        this.confirmarSenha = "";
-        this.mensagemErro = "";
+        try {
+          const userData = {
+            nome: this.nome,
+            cpf: this.cpf,
+            telefone: this.telefone,
+            email: this.email,
+            password: this.senha,
+          };
+          console.log("Enviando dados:", userData); // Verifique os dados antes de enviar
+          const response = await axios.post('http://localhost:3333/users', userData);
+
+          if (response.status === 201) {
+            alert('Usuário cadastrado com sucesso!');
+            // Limpar o formulário
+            this.nome = "";
+            this.cpf = "";
+            this.telefone = "";
+            this.email = "";
+            this.senha = "";
+            this.confirmarSenha = "";
+            this.mensagemErro = "";
+          } else {
+            this.mensagemErro = "Erro ao cadastrar usuário.";
+          }
+        } catch (error) {
+          console.error("Erro na requisição:", error.response); // Verifique a resposta do erro
+          if (error.response && error.response.data && error.response.data.message) {
+            this.mensagemErro = error.response.data.message;
+          } else {
+            this.mensagemErro = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
+          }
+        }
       } else {
         if (!this.validarSenhas()) {
           alert("As senhas não correspondem.");
@@ -76,13 +119,14 @@ export default {
           alert("Por favor, corrija os erros no formulário.");
         }
       }
-    },
+    }
+
   },
 };
 </script>
 
 <style scoped>
-.content{
+.content {
   width: 100%;
   height: calc(100% - 180px);
   display: flex;

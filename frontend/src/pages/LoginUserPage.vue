@@ -42,7 +42,7 @@ export default {
     async submitForm() {
       if (this.todosPreenchidos) {
         try {
-          const response = await axios.post('http://localhost:3333/auth/login', {
+          const response = await axios.post('http://localhost:3333/auth', {
             email: this.email,
             password: this.senha,
           });
