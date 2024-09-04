@@ -1,12 +1,14 @@
 <template>
-  <div class="card">
-    <div class="card-image">
-      <img :src="url" alt="Imagem do Filme" />
-      <div class="card-overlay">
-        <h2>{{ nome }}</h2>
+  <router-link :to="{ name: 'MovieDetails', params: { id: movieId } }" class="card-link">
+    <div class="card">
+      <div class="card-image">
+        <img :src="url" alt="Imagem do Filme" />
+        <div class="card-overlay">
+          <h2>{{ nome }}</h2>
+        </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -21,11 +23,20 @@ export default {
       type: String,
       default: "",
     },
+    movieId: {
+      type: Number,
+      required: true,
+    },
   },
 };
 </script>
 
 <style scoped>
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .card {
   position: relative;
   width: 300px;

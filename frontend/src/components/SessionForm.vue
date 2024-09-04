@@ -30,6 +30,7 @@
 
 <script>
 import { fetchPopularMovies } from '../service/movieService';
+import { createSession, updateSession } from '../service/sessionService';
 
 export default {
   props: {
@@ -44,7 +45,7 @@ export default {
     rooms: {
       type: Array,
       default: () => [],
-    },
+    }
   },
   data() {
     return {
@@ -68,10 +69,19 @@ export default {
     },
   },
   methods: {
-    submitForm() {
-      this.$emit('save', this.localSession);
-    },
-  },
+    async submitForm() {
+      try {
+        if (this.isEdit) {
+          await updateSession(this.localSession.id, this.localSession);
+        } else {
+          await createSession(this.localSession);
+        }
+        this.$emit('save');
+      } catch (error) {
+        console.error('Erro ao salvar a sessão:', error);
+      }
+    }
+  }
 };
 </script>
 

@@ -5,13 +5,14 @@
       :key="movie.id"
       :nome="movie.title"
       :url="getImageUrl(movie.poster_path)"
+      :movieId="movie.id"
     />
   </div>
 </template>
 
 <script>
-import { API_KEY } from "../api/config";
 import apiClient from "../api/axiosConfig";
+import { API_KEY } from "../api/config";
 
 import CardMovie from "../components/CardMovie.vue";
 
