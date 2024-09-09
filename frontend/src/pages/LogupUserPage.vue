@@ -117,7 +117,6 @@ export default {
 
           if (response.status === 201) {
             alert("Usuário cadastrado com sucesso!");
-            // Limpar o formulário
             this.nome = "";
             this.cpf = "";
             this.telefone = "";

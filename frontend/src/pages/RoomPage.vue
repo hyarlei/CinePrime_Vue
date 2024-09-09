@@ -12,9 +12,11 @@
     </div>
     <div v-if="rooms.length">
       <div v-for="room in rooms" :key="room.id" class="room-item">
-        <p><strong>Nome: Sala</strong> {{ room.id }}</p>
+        <p><strong>Nome:</strong> Sala {{ room.id }}</p>
         <p><strong>Capacidade:</strong> {{ room.qtd_max }} lugares</p>
-        <p><strong>Tipo de exibição:</strong> {{ room.typeExhibitionAccepted }}</p>
+        <p>
+          <strong>Tipo de exibição:</strong> {{ room.typeExhibitionAccepted }}
+        </p>
         <div class="buttons">
           <button class="edit" @click="editRoom(room)">Editar</button>
           <button class="delete" @click="deleteRoom(room.id)">Excluir</button>
@@ -28,7 +30,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import RoomForm from "../components/RoomForm.vue";
 
 export default {
@@ -41,9 +43,9 @@ export default {
       showForm: false,
       isEdit: false,
       currentRoom: {
-        // id: null,
+        id: null,
         qtd_max: 0,
-        typeExhibitionAccepted: '',
+        typeExhibitionAccepted: "",
       },
     };
   },
@@ -53,7 +55,11 @@ export default {
   methods: {
     async fetchRooms() {
       try {
-        const response = await axios.get('http://localhost:3333/room');
+        const response = await axios.get("http://localhost:3333/room", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         this.rooms = response.data;
       } catch (error) {
         console.error("Erro ao buscar salas:", error);
@@ -63,9 +69,9 @@ export default {
       this.showForm = true;
       this.isEdit = false;
       this.currentRoom = {
-        // id: null,
+        id: null,
         qtd_max: 0,
-        typeExhibitionAccepted: '',
+        typeExhibitionAccepted: "",
       };
     },
     editRoom(room) {
@@ -76,14 +82,12 @@ export default {
     async saveRoom(room) {
       try {
         if (this.isEdit) {
-          // Atualizar sala
           await axios.put(`http://localhost:3333/room/${room.id}`, room);
         } else {
-          // Criar nova sala
-          const response = await axios.post('http://localhost:3333/room', room);
+          const response = await axios.post("http://localhost:3333/room", room);
           this.rooms.push(response.data);
         }
-        this.cancelEdit();
+        this.cancelEdit(); // Fecha o formulário
         this.fetchRooms(); // Atualiza a lista de salas
       } catch (error) {
         console.error("Erro ao salvar sala:", error);
@@ -92,13 +96,13 @@ export default {
     async deleteRoom(id) {
       try {
         await axios.delete(`http://localhost:3333/room/${id}`);
-        this.fetchRooms(); // Atualiza a lista de salas após a exclusão
+        this.fetchRooms();
       } catch (error) {
         console.error("Erro ao excluir sala:", error);
       }
     },
     cancelEdit() {
-      this.showForm = false;
+      this.showForm = false; // Fecha o formulário
     },
   },
 };
@@ -109,6 +113,7 @@ export default {
   padding: 20px;
   height: 100%;
 }
+
 .room-item {
   border: 1px solid #ddd;
   border-radius: 4px;
