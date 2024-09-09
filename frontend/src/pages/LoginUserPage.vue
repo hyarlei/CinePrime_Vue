@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -42,21 +42,31 @@ export default {
     async submitForm() {
       if (this.todosPreenchidos) {
         try {
-          const response = await axios.post('http://localhost:3333/auth', {
+          const response = await axios.post("http://localhost:3333/auth", {
             email: this.email,
             password: this.senha,
           });
 
-          const token = response.data.token;
+          // Verifique o que está sendo retornado pela API
+          // console.log(response.data.user.token);
 
-          // Armazena o token em localStorage para usá-lo nas requisições futuras
-          localStorage.setItem('token', token);
+          // Verifique se a resposta contém o token corretamente
+          const token = response.data.user.token;
 
-          // Redireciona o usuário para a página principal ou painel
-          this.$router.push('/');
+          if (token) {
+            // Armazena o token no localStorage
+            localStorage.setItem("token", token);
 
+            // Redireciona o usuário
+            this.$router.push("/");
+          } else {
+            // Caso o token não esteja presente, exibe um erro
+            this.mensagemErro = "Token não retornado pela API.";
+          }
         } catch (error) {
-          this.mensagemErro = "Falha no login: " + (error.response?.data.message || error.message);
+          this.mensagemErro =
+            "Falha no login: " +
+            (error.response?.data.message || error.message);
         }
       } else {
         this.mensagemErro = "Por favor, preencha todos os campos.";
@@ -65,7 +75,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .content {
@@ -127,8 +136,8 @@ button {
   transition: color 0.3s;
 }
 
-.link:hover{
-    color: #0056b3;
+.link:hover {
+  color: #0056b3;
 }
 
 button:disabled {

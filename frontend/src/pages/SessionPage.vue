@@ -31,13 +31,17 @@
 </template>
 
 <script>
+// import { fetchSessions } from "@/service/sessionService";
+import axios from "axios";
 import SessionForm from "../components/SessionForm.vue";
-import {
-  createSession,
-  deleteSession,
-  fetchSessions,
-  updateSession
-} from "../service/sessionService";
+// import {
+//   createSession,
+//   deleteSession,
+//   fetchSessions,
+//   updateSession
+// } from "../service/sessionService";
+
+// import { fetchRooms } from "../service/roomService";
 
 export default {
   components: {
@@ -59,57 +63,165 @@ export default {
     };
   },
   async created() {
-    await this.loadSessions();
+    this.fetchSessions();
+    this.fetchRooms();
   },
+  // methods: {
+  //   async loadSessions() {
+  //     try {
+  //       this.sessions = await fetchSessions();
+  //       console.log("Carregou as sessoes")
+  //     } catch (error) {
+  //       console.error("Erro ao carregar sessões:", error);
+  //     }
+  //   },
+  //   async loadRooms() {
+  //     try {
+  //       console.log("Carregou as salas")
+  //       this.rooms = await fetchRooms();
+  //     } catch (error) {
+  //       console.error("Erro ao carregar salas:", error);
+  //     }
+  //   },
+  //   getMovieTitle(movieId) {
+  //     const movie = this.movies.find((m) => m.id === movieId);
+  //     return movie ? movie.title : "Desconhecido";
+  //   },
+  //   getRoomName(roomId) {
+  //     const room = this.rooms.find((r) => r.id === roomId);
+  //     return room ? room.name : "Desconhecida";
+  //   },
+  //   addSession() {
+  //     this.showForm = true;
+  //     this.isEdit = false;
+  //     this.currentSession = {
+  //       id: null,
+  //       movieId: null,
+  //       roomId: null,
+  //       time: "",
+  //     };
+  //   },
+  //   async saveSession(session) {
+  //     try {
+  //       if (this.isEdit) {
+  //         await updateSession(session.id, session);
+  //       } else {
+  //         await createSession(session);
+  //       }
+  //       await this.loadSessions();
+  //       this.cancelEdit();
+  //     } catch (error) {
+  //       console.error("Erro ao salvar sessão:", error);
+  //     }
+  //   },
+  //   async deleteSession(id) {
+  //     try {
+  //       await deleteSession(id);
+  //       await this.loadSessions();
+  //     } catch (error) {
+  //       console.error("Erro ao excluir sessão:", error);
+  //     }
+  //   },
+  //   cancelEdit() {
+  //     this.showForm = false;
+  //   },
+  // },
+
   methods: {
-    async loadSessions() {
+    async fetchRooms() {
       try {
-        this.sessions = await fetchSessions();
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3333/room", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.rooms = response.data;
       } catch (error) {
-        console.error("Erro ao carregar sessões:", error);
+        console.error("Erro ao buscar salas:", error);
       }
     },
-    getMovieTitle(movieId) {
-      const movie = this.movies.find((m) => m.id === movieId);
-      return movie ? movie.title : "Desconhecido";
+    async fetchSessions() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3333/session", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.rooms = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar salas:", error);
+      }
     },
-    getRoomName(roomId) {
-      const room = this.rooms.find((r) => r.id === roomId);
-      return room ? room.name : "Desconhecida";
-    },
-    addSession() {
+
+    addRoom() {
       this.showForm = true;
       this.isEdit = false;
-      this.currentSession = {
+      this.currentRoom = {
         id: null,
-        movieId: null,
-        roomId: null,
-        time: "",
+        qtd_max: 0,
+        typeExhibitionAccepted: "",
       };
     },
+
+    editSession(session) {
+      this.showForm = true;
+      this.isEdit = true;
+      this.currentSession = { ...session };
+    },
+
     async saveSession(session) {
       try {
+        const token = localStorage.getItem("token");
+
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+        };
         if (this.isEdit) {
-          await updateSession(session.id, session);
+          await axios.put(
+            `http://localhost:3333/session/${session.id}`,
+            session,
+            {
+              headers,
+            }
+          );
         } else {
-          await createSession(session);
+          const response = await axios.post(
+            "http://localhost:3333/session",
+            session,
+            { headers }
+          );
+          this.sessions.push(response.data);
         }
-        await this.loadSessions();
-        this.cancelEdit();
+        this.cancelEdit(); // Fecha o formulário
+        this.fetchSessions(); // Atualiza a lista de salas
       } catch (error) {
-        console.error("Erro ao salvar sessão:", error);
+        console.error("Erro ao salvar sala:", error);
       }
     },
+
     async deleteSession(id) {
       try {
-        await deleteSession(id);
-        await this.loadSessions();
+        const token = localStorage.getItem("token");
+
+        await axios.delete(`http://localhost:3333/session/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          },
+        });
+        this.fetchSessions();
       } catch (error) {
-        console.error("Erro ao excluir sessão:", error);
+        console.error("Erro ao excluir sala:", error);
       }
     },
+
     cancelEdit() {
-      this.showForm = false;
+      this.showForm = false; // Fecha o formulário
     },
   },
 };
@@ -178,5 +290,4 @@ export default {
 .edit:hover {
   background-color: #388e3c;
 }
-
 </style>

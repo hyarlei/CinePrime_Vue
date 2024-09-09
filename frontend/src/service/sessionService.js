@@ -1,8 +1,18 @@
-import apiClient from "../api/axiosConfig";
+import api from "../api/Api";
+
+// Função para obter o token, supondo que está no localStorage
+function getToken() {
+  return localStorage.getItem("token"); // Ou adapte conforme onde está armazenando o token
+}
 
 export async function createSession(sessionData) {
   try {
-    const response = await apiClient.post('/sessions', sessionData);
+    const token = getToken();
+    const response = await api.post("/session", sessionData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Erro ao criar sessão:", error);
@@ -12,7 +22,12 @@ export async function createSession(sessionData) {
 
 export async function updateSession(sessionId, sessionData) {
   try {
-    const response = await apiClient.put(`/sessions/${sessionId}`, sessionData);
+    const token = getToken();
+    const response = await api.put(`/session/${sessionId}`, sessionData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Erro ao atualizar sessão:", error);
@@ -22,20 +37,45 @@ export async function updateSession(sessionId, sessionData) {
 
 export async function fetchSessions() {
   try {
-    const response = await apiClient.get('/sessions');
+    const token = localStorage.getItem("token");
+    const response = await api.get("/session", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error("Erro ao buscar sessões:", error);
-    throw error;
+    console.error("Erro ao buscar salas:", error);
   }
 }
 
 export async function deleteSession(sessionId) {
   try {
-    const response = await apiClient.delete(`/sessions/${sessionId}`);
-    return response.data;
+    const token = getToken();
+    await api.delete(`room/${sessionId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    this.fetchSession();
   } catch (error) {
-    console.error("Erro ao deletar sessão:", error);
-    throw error;
+    console.error("Erro ao excluir sessão:", error);
   }
 }
+
+// export async function deleteSession(sessionId) {
+//   try {
+//     const token = getToken();
+//     const response = await api.delete(`/session/${sessionId}`, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Erro ao deletar sessão:", error);
+//     throw error;
+//   }
+// }

@@ -55,9 +55,11 @@ export default {
   methods: {
     async fetchRooms() {
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:3333/room", {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
         this.rooms = response.data;
@@ -65,6 +67,7 @@ export default {
         console.error("Erro ao buscar salas:", error);
       }
     },
+
     addRoom() {
       this.showForm = true;
       this.isEdit = false;
@@ -74,17 +77,31 @@ export default {
         typeExhibitionAccepted: "",
       };
     },
+
     editRoom(room) {
       this.showForm = true;
       this.isEdit = true;
       this.currentRoom = { ...room };
     },
+
     async saveRoom(room) {
       try {
+        const token = localStorage.getItem("token");
+
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+        };
         if (this.isEdit) {
-          await axios.put(`http://localhost:3333/room/${room.id}`, room);
+          await axios.put(`http://localhost:3333/room/${room.id}`, room, {
+            headers,
+          });
         } else {
-          const response = await axios.post("http://localhost:3333/room", room);
+          const response = await axios.post(
+            "http://localhost:3333/room",
+            room,
+            { headers }
+          );
           this.rooms.push(response.data);
         }
         this.cancelEdit(); // Fecha o formulário
@@ -93,14 +110,23 @@ export default {
         console.error("Erro ao salvar sala:", error);
       }
     },
+
     async deleteRoom(id) {
       try {
-        await axios.delete(`http://localhost:3333/room/${id}`);
+        const token = localStorage.getItem("token");
+
+        await axios.delete(`http://localhost:3333/room/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          },
+        });
         this.fetchRooms();
       } catch (error) {
         console.error("Erro ao excluir sala:", error);
       }
     },
+
     cancelEdit() {
       this.showForm = false; // Fecha o formulário
     },
