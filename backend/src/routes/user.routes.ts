@@ -12,7 +12,8 @@ const listarUserController = new ListarUsersEmailController();
 const findUserByIdController = new findUserById();
 const updateUserController = new UpdateUserController();
 
-routes.post("/", createUserController.store);
+// routes.post("/", createUserController.store);
+routes.post("/", createUserController.createUser);
 routes.use(_auth);
 routes.delete("/:id", deleteUserController.delete);
 routes.get("/", listarUsersController.index);

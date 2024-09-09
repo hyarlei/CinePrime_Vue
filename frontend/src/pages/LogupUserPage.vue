@@ -109,14 +109,24 @@ export default {
             email: this.email,
             password: this.senha,
           };
-          console.log("Enviando dados:", userData); // Verifique os dados antes de enviar
+
           const response = await axios.post(
             "http://localhost:3333/user",
             userData
           );
 
+          // Verifique se o cadastro foi bem-sucedido
           if (response.status === 201) {
+            // Recebe o token da resposta
+            const token = response.data.token;
+
+            // Armazena o token no localStorage
+            localStorage.setItem("token", token);
+
+            // Mensagem de sucesso
             alert("Usuário cadastrado com sucesso!");
+
+            // Limpa o formulário
             this.nome = "";
             this.cpf = "";
             this.telefone = "";
@@ -124,11 +134,14 @@ export default {
             this.senha = "";
             this.confirmarSenha = "";
             this.mensagemErro = "";
+
+            // Redireciona o usuário para outra página (por exemplo, a página principal)
+            this.$router.push("/");
           } else {
             this.mensagemErro = "Erro ao cadastrar usuário.";
           }
         } catch (error) {
-          console.error("Erro na requisição:", error.response); // Verifique a resposta do erro
+          console.error("Erro na requisição:", error.response);
           if (
             error.response &&
             error.response.data &&
