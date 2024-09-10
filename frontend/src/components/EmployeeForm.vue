@@ -1,114 +1,79 @@
 <template>
   <div class="employee-form">
-    <h2>{{ isEdit ? "Editar Funcionário" : "Adicionar Funcionário" }}</h2>
-    <form @submit.prevent="submitForm">
-      <div>
-        <label for="nome">Nome:</label>
-        <input v-model="localEmployee.nome" type="text" required />
-      </div>
-      <div>
-        <label for="email">Email:</label>
-        <input v-model="localEmployee.email" type="email" required />
-      </div>
-      <div>
-        <label for="cpf">CPF:</label>
-        <input
-          maxlength="14"
-          minlength="14"
-          v-model="localEmployee.cpf"
-          placeholder="CPF"
-          required
-          @input="applyCpfMask"
-        />
-      </div>
-      <div>
-        <label for="telefone">Telefone:</label>
-        <input
-          v-model="localEmployee.telefone"
-          @input="formatarTelefone"
-          type="text"
-          id="telefone"
-          required
-        />
-      </div>
-      <div>
-        <label for="password">Senha:</label>
-        <input v-model="localEmployee.password" type="password" required />
-      </div>
-      <button type="submit">{{ isEdit ? "Atualizar" : "Salvar" }}</button>
-      <button type="button" @click="$emit('cancel')">Cancelar</button>
-    </form>
+    <label for="nome">Nome</label>
+    <input v-model="formEmployee.nome" id="nome" type="text" required />
+
+    <label for="cpf">CPF</label>
+    <input v-model="formEmployee.cpf" id="cpf" type="text" required />
+
+    <label for="telefone">Telefone</label>
+    <input v-model="formEmployee.telefone" id="telefone" type="text" required />
+
+    <label for="email">Email</label>
+    <input v-model="formEmployee.email" id="email" type="email" required />
+
+    <label for="password">Senha</label>
+    <input v-model="formEmployee.password" id="password" type="password" required />
+
+    <div class="buttons">
+      <button class="save" @click.prevent="saveEmployee">Salvar</button>
+      <button class="cancel" @click.prevent="cancel">Cancelar</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    employee: {
-      type: Object,
-      default: () => ({
-        id: null,
-        nome: "",
-        email: "",
-        cpf: "",
-        telefone: "",
-        password: "",
-      }),
-    },
-    isEdit: {
-      type: Boolean,
-      default: false,
-    },
+    employee: Object,
+    isEdit: Boolean
   },
   data() {
     return {
-      localEmployee: { ...this.employee },
+      formEmployee: { ...this.employee }
     };
   },
-  watch: {
-    employee: {
-      handler(newEmployee) {
-        this.localEmployee = { ...newEmployee };
-      },
-      deep: true,
-    },
-  },
   methods: {
-    submitForm() {
-      this.$emit("save", this.localEmployee);
+    saveEmployee() {
+      this.$emit("save", this.formEmployee);
     },
-    applyCpfMask() {
-      const value = this.localEmployee.cpf.replace(/\D/g, "");
-      this.localEmployee.cpf = value
-        .replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4")
-        .substring(0, 14);
-    },
-    formatarTelefone() {
-      let telefone = this.telefone.replace(/\D/g, "");
-      if (telefone.length > 0) {
-        telefone = telefone.replace(/^(\d{2})(\d)/g, "($1) $2");
-      }
-      if (telefone.length > 9) {
-        telefone = telefone.replace(/(\d{5})(\d{1,4})$/, "$1-$2");
-      }
-      this.telefone = telefone;
-    },
-  },
+    cancel() {
+      this.$emit("cancel");
+    }
+  }
 };
 </script>
 
 <style scoped>
 .employee-form {
-  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+label {
+  margin: 10px 0 5px;
+}
+input {
+  padding: 8px;
+  margin-bottom: 10px;
+}
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+.save {
+  background-color: #4caf50;
+  padding: 10px;
+  color: white;
+  border: none;
   border-radius: 4px;
-  padding: 16px;
-  background-color: #f9f9f9;
-  margin-bottom: 20px;
+  cursor: pointer;
 }
-form div {
-  margin-bottom: 12px;
-}
-button {
-  margin-right: 8px;
+.cancel {
+  background-color: #f44336;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

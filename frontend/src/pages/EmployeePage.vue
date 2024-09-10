@@ -1,27 +1,16 @@
 <template>
   <div class="employee-list">
     <h1>Funcionários</h1>
-    <button class="btn" @click="addEmployee">Adicionar Novo Funcionário</button>
-
+    <button class="btn" @click="addEmployee">Adicionar Funcionário</button>
     <div v-if="showForm">
-      <EmployeeForm
-        :employee="currentEmployee"
-        :isEdit="isEdit"
-        @save="saveEmployee"
-        @cancel="cancelEdit"
-      />
+      <EmployeeForm :employee="currentEmployee" :isEdit="isEdit" @save="saveEmployee" @cancel="cancelEdit" />
     </div>
-
     <div v-if="employees.length">
-      <div
-        v-for="employee in employees"
-        :key="employee.id"
-        class="employee-item"
-      >
+      <div v-for="employee in employees" :key="employee.id" class="employee-item">
         <p><strong>Nome:</strong> {{ employee.nome }}</p>
-        <p><strong>Email:</strong> {{ employee.email }}</p>
         <p><strong>CPF:</strong> {{ employee.cpf }}</p>
         <p><strong>Telefone:</strong> {{ employee.telefone }}</p>
+        <p><strong>Email:</strong> {{ employee.email }}</p>
         <div class="buttons">
           <button class="edit" @click="editEmployee(employee)">Editar</button>
           <button class="delete" @click="deleteEmployee(employee.id)">
@@ -42,7 +31,7 @@ import EmployeeForm from "../components/EmployeeForm.vue";
 
 export default {
   components: {
-    EmployeeForm,
+    EmployeeForm
   },
   data() {
     return {
@@ -52,23 +41,29 @@ export default {
       currentEmployee: {
         id: null,
         nome: "",
-        email: "",
         cpf: "",
         telefone: "",
-        password: "",
-      },
+        email: "",
+        password: ""
+      }
     };
+  },
+  created() {
+    this.fetchEmployees();
   },
   methods: {
     async fetchEmployees() {
       try {
-        const response = await axios.get("http://localhost:3333/employee");
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3333/employee", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         this.employees = response.data;
       } catch (error) {
-        console.error(
-          "Erro ao buscar funcionários:",
-          error.response ? error.response.data : error.message
-        );
+        console.error("Erro ao buscar funcionários:", error.response?.data || error.message);
       }
     },
     addEmployee() {
@@ -77,10 +72,10 @@ export default {
       this.currentEmployee = {
         id: null,
         nome: "",
-        email: "",
         cpf: "",
         telefone: "",
-        password: "",
+        email: "",
+        password: ""
       };
     },
     editEmployee(employee) {
@@ -90,68 +85,59 @@ export default {
     },
     async saveEmployee(employee) {
       try {
+        const token = localStorage.getItem("token");
+
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+        };
         if (this.isEdit) {
-          const response = await axios.put(
-            `http://localhost:3333/employee/${employee.id}`,
-            employee
-          );
-          const index = this.employees.findIndex((e) => e.id === employee.id);
-          this.$set(this.employees, index, response.data);
+          await axios.put(`http://localhost:3333/employee/${employee.id}`, employee, {
+            headers,
+          });
+
         } else {
-          const response = await axios.post(
-            "http://localhost:3333/employee",
-            employee
-          );
-          this.employees.push(response.data);
+          const response = await axios.post("http://localhost:3333/employee", employee, {headers});
+          if (response.data.message === "Sem autorização") {
+            console.error("Erro: Sem autorização para criar funcionário");
+          } else {
+            this.employees.push(response.data);
+          }
+            this.employees.push(response.data);
+
         }
-        this.showForm = false;
-        this.resetCurrentEmployee();
+        this.cancelEdit();
+        this.fetchEmployees();
       } catch (error) {
-        console.error(
-          "Erro ao salvar funcionário:",
-          error.response ? error.response.data : error.message
-        );
+        console.error("Erro ao salvar funcionário:", error);
       }
     },
-    async deleteEmployee(employeeId) {
+    async deleteEmployee(id) {
       try {
-        await axios.delete(`http://localhost:3333/employee/${employeeId}`);
-        this.employees = this.employees.filter(
-          (employee) => employee.id !== employeeId
-        );
+        const token = localStorage.getItem("token");
+        await axios.delete(`http://localhost:3333/employee/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          },
+        });
+        this.fetchEmployees();
       } catch (error) {
-        console.error(
-          "Erro ao excluir funcionário:",
-          error.response ? error.response.data : error.message
-        );
+        console.error("Erro ao excluir funcionário:", error);
       }
     },
     cancelEdit() {
       this.showForm = false;
-      this.resetCurrentEmployee();
-    },
-    resetCurrentEmployee() {
-      this.currentEmployee = {
-        id: null,
-        nome: "",
-        email: "",
-        cpf: "",
-        telefone: "",
-        password: "",
-      };
-    },
-  },
-  created() {
-    this.fetchEmployees();
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
 .employee-list {
-  height: calc(100% - 180px);
   padding: 20px;
 }
+
 .employee-item {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -163,12 +149,9 @@ export default {
 .btn {
   background-color: #007bff;
   color: white;
-  border: none;
-  border-radius: 2px;
-  padding: 0.5em 1em;
+  padding: 10px 20px;
   cursor: pointer;
-  font-size: 1em;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .btn:hover {
@@ -177,31 +160,24 @@ export default {
 
 .buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  gap: 8px;
+  gap: 10px;
 }
 
 .edit {
   background-color: #4caf50;
-  width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
 }
 
 .delete {
   background-color: red;
-  width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
 }
 </style>
