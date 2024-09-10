@@ -3,10 +3,19 @@
     <h1>Funcionários</h1>
     <button class="btn" @click="addEmployee">Adicionar Funcionário</button>
     <div v-if="showForm">
-      <EmployeeForm :employee="currentEmployee" :isEdit="isEdit" @save="saveEmployee" @cancel="cancelEdit" />
+      <EmployeeForm
+        :employee="currentEmployee"
+        :isEdit="isEdit"
+        @save="saveEmployee"
+        @cancel="cancelEdit"
+      />
     </div>
     <div v-if="employees.length">
-      <div v-for="employee in employees" :key="employee.id" class="employee-item">
+      <div
+        v-for="employee in employees"
+        :key="employee.id"
+        class="employee-item"
+      >
         <p><strong>Nome:</strong> {{ employee.nome }}</p>
         <p><strong>CPF:</strong> {{ employee.cpf }}</p>
         <p><strong>Telefone:</strong> {{ employee.telefone }}</p>
@@ -31,7 +40,7 @@ import EmployeeForm from "../components/EmployeeForm.vue";
 
 export default {
   components: {
-    EmployeeForm
+    EmployeeForm,
   },
   data() {
     return {
@@ -44,8 +53,8 @@ export default {
         cpf: "",
         telefone: "",
         email: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   created() {
@@ -63,7 +72,7 @@ export default {
         });
         this.employees = response.data;
       } catch (error) {
-        console.error("Erro ao buscar funcionários:", error.response?.data || error.message);
+        console.error("Erro ao buscar funcionários:", error);
       }
     },
     addEmployee() {
@@ -75,7 +84,7 @@ export default {
         cpf: "",
         telefone: "",
         email: "",
-        password: ""
+        password: "",
       };
     },
     editEmployee(employee) {
@@ -92,19 +101,25 @@ export default {
           Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
         };
         if (this.isEdit) {
-          await axios.put(`http://localhost:3333/employee/${employee.id}`, employee, {
-            headers,
-          });
-
+          await axios.put(
+            `http://localhost:3333/employee/${employee.id}`,
+            employee,
+            {
+              headers,
+            }
+          );
         } else {
-          const response = await axios.post("http://localhost:3333/employee", employee, {headers});
+          const response = await axios.post(
+            "http://localhost:3333/employee",
+            employee,
+            { headers }
+          );
           if (response.data.message === "Sem autorização") {
             console.error("Erro: Sem autorização para criar funcionário");
           } else {
             this.employees.push(response.data);
           }
-            this.employees.push(response.data);
-
+          this.employees.push(response.data);
         }
         this.cancelEdit();
         this.fetchEmployees();
@@ -128,14 +143,15 @@ export default {
     },
     cancelEdit() {
       this.showForm = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .employee-list {
   padding: 20px;
+  min-height: 100%;
 }
 
 .employee-item {
@@ -149,9 +165,12 @@ export default {
 .btn {
   background-color: #007bff;
   color: white;
-  padding: 10px 20px;
+  border: none;
+  border-radius: 2px;
+  padding: 0.5em 1em;
   cursor: pointer;
-  margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 16px;
 }
 
 .btn:hover {
@@ -160,24 +179,31 @@ export default {
 
 .buttons {
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
 }
 
 .edit {
   background-color: #4caf50;
+  width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .delete {
   background-color: red;
+  width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 </style>

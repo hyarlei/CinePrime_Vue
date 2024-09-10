@@ -137,7 +137,7 @@ export default {
 <style scoped>
 .room-list {
   padding: 20px;
-  height: 100%;
+  min-height: 100%;
 }
 
 .room-item {
