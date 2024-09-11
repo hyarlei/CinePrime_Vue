@@ -50,19 +50,19 @@ export default {
       }
     },
     async purchaseTicket() {
-  try {
-    const ticketData = {
-      idUser: parseInt(localStorage.getItem("userId")),
-      idSession: this.sessionId,
-      type: this.ticketType,
-    };
+      try {
+        const ticketData = {
+          idUser: parseInt(localStorage.getItem("userId")),
+          idSession: this.sessionId,
+          type: this.ticketType,
+        };
 
-    await apiClient.post('/ticket', ticketData);
-    alert('Ingresso comprado com sucesso!');
-  } catch (error) {
-    console.error("Erro ao comprar ingresso:", error);
-  }
-},
+        await apiClient.post("/ticket", ticketData);
+        alert("Ingresso comprado com sucesso!");
+      } catch (error) {
+        console.error("Erro ao comprar ingresso:", error);
+      }
+    },
     getImageUrl(path) {
       return `https://image.tmdb.org/t/p/w500${path}`;
     },

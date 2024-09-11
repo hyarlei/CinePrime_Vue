@@ -32,8 +32,8 @@ model Session {
     id              Int      @id @default(autoincrement())
     dateTime        DateTime
     idRoom          Int
-    exibitionType   String
-    dublingType     String
+    // exibitionType   String
+    // dublingType     String
     movieTitle      String
     atualTicketsQtd Int
     maxTicketsQtd   Int

@@ -14,7 +14,7 @@
       <div v-for="session in sessions" :key="session.id" class="session-item">
         <p><strong>Filme:</strong> {{ session.movieTitle }}</p>
         <p><strong>Sala:</strong> Sala {{ session.idRoom }}</p>
-        <p><strong>Horário:</strong> {{ session.time }}</p>
+        <p><strong>Horário:</strong> {{ session.dateTime }}</p>
         <p><strong>Ingressos Atuais:</strong> {{ session.atualTicketsQtd }}</p>
         <p>
           <strong>Capacidade Máxima:</strong>
@@ -50,7 +50,7 @@ export default {
       currentSession: {
         movieTitle: "",
         roomId: null,
-        time: "",
+        dateTime: "",
         atualTicketsQtd: 0,
         maxTicketsQtd: 0,
       },
@@ -81,7 +81,7 @@ export default {
       this.currentSession = {
         movieTitle: "",
         roomId: null,
-        time: "",
+        dateTime: "",
         atualTicketsQtd: 0,
         maxTicketsQtd: 0,
       };
@@ -94,20 +94,27 @@ export default {
     },
 
     async saveSession(session) {
+      if (session.maxTicketsQtd <= 0) {
+        alert("A quantidade máxima de ingressos deve ser maior que zero.");
+        return;
+      }
+
+      session.atualTicketsQtd = session.maxTicketsQtd;
+
       try {
         const token = localStorage.getItem("token");
-
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
+
+        console.log("Dados da sessão antes do envio:", session);
+
         if (this.isEdit) {
           await axios.put(
             `http://localhost:3333/session/${session.id}`,
             session,
-            {
-              headers,
-            }
+            { headers }
           );
         } else {
           const response = await axios.post(
@@ -123,7 +130,6 @@ export default {
         console.error("Erro ao salvar sessão:", error);
       }
     },
-
     async deleteSession(id) {
       try {
         const token = localStorage.getItem("token");

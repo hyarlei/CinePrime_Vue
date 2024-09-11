@@ -8,26 +8,22 @@ import { UpdateSessionService } from '../service/SessionService/UpdateSessionSer
 
 interface ISession {
     dateTime: Date;
-    exibitionType: string;
-    dublingType: string;
     idRoom: number;
-    idMovie: number;
+    movieTitle: string;
     atualTicketsQtd: number;
     maxTicketsQtd: number;
 }
 
 export class CreateSessionController {
     async store(req: Request, res: Response) {
-        const { dateTime, exibitionType, dublingType, idMovie, idRoom, atualTicketsQtd, maxTicketsQtd }: ISession = req.body;
+        const { dateTime, idRoom, movieTitle, atualTicketsQtd, maxTicketsQtd }: ISession = req.body;
         const createSessionService = new CreateSessionService();
 
         const session = await createSessionService.execute(
             {
                 dateTime,
-                exibitionType,
-                dublingType,
-                idMovie,
                 idRoom,
+                movieTitle,
                 atualTicketsQtd,
                 maxTicketsQtd,
             },
@@ -52,17 +48,15 @@ export class ListSessionsController {
 export class UpdateSessionController {
     async update(req: Request, res: Response) {
         const { id } = req.params;
-        const { dateTime, exibitionType, dublingType, idMovie, idRoom, atualTicketsQtd, maxTicketsQtd }: ISession = req.body;
+        const { dateTime, idRoom, movieTitle, atualTicketsQtd, maxTicketsQtd }: ISession = req.body;
 
         const updateSessionService = new UpdateSessionService();
 
         const session = await updateSessionService.execute(
             {
                 dateTime,
-                exibitionType,
-                dublingType,
-                idMovie,
                 idRoom,
+                movieTitle,
                 atualTicketsQtd,
                 maxTicketsQtd,
             },

@@ -5,18 +5,18 @@ const prisma = new PrismaClient();
 
 interface ISession {
     dateTime: Date;
-    exibitionType: string;
-    dublingType: string;
     idRoom: number;
+    movieTitle: string;
     atualTicketsQtd: number;
     maxTicketsQtd: number;
 }
 
 export class CreateSessionService {
-    async execute({ dateTime, exibitionType, dublingType, idRoom, atualTicketsQtd, maxTicketsQtd }: ISession, req: Request, res: Response) {
-        if (!dateTime || !exibitionType || !dublingType || idRoom === undefined || atualTicketsQtd === undefined || maxTicketsQtd === undefined) {
+    async execute({ dateTime, idRoom, movieTitle, atualTicketsQtd, maxTicketsQtd }: ISession, req: Request, res: Response) {
+        if (!dateTime || !movieTitle || idRoom === undefined || atualTicketsQtd === undefined || maxTicketsQtd === undefined) {
             return res.status(400).json({ message: 'Preencha todos os campos' });
         }
+
         if (atualTicketsQtd > maxTicketsQtd) {
             return res.status(400).json({ message: 'Quantidade de ingressos atual não pode ser maior que a quantidade máxima' });
         }
@@ -33,9 +33,8 @@ export class CreateSessionService {
             const session = await prisma.session.create({
                 data: {
                     dateTime,
-                    exibitionType,
-                    dublingType,
                     idRoom,
+                    movieTitle,
                     atualTicketsQtd,
                     maxTicketsQtd,
                 },

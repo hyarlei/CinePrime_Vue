@@ -95,18 +95,18 @@ export default {
     async saveEmployee(employee) {
       try {
         const token = localStorage.getItem("token");
-
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
         };
+
+        console.log("Dados do funcionário:", employee);
+
         if (this.isEdit) {
           await axios.put(
             `http://localhost:3333/employee/${employee.id}`,
             employee,
-            {
-              headers,
-            }
+            { headers }
           );
         } else {
           const response = await axios.post(
@@ -114,17 +114,31 @@ export default {
             employee,
             { headers }
           );
+
           if (response.data.message === "Sem autorização") {
             console.error("Erro: Sem autorização para criar funcionário");
           } else {
-            this.employees.push(response.data);
+            if (Array.isArray(this.employees)) {
+              this.employees.push(response.data);
+            } else {
+              console.error("Erro: employees não é um array");
+            }
           }
-          this.employees.push(response.data);
         }
+
         this.cancelEdit();
         this.fetchEmployees();
       } catch (error) {
-        console.error("Erro ao salvar funcionário:", error);
+        if (error.response) {
+          // A resposta foi recebida com um código de status que não está na faixa de 2xx
+          console.error("Erro na resposta:", error.response.data);
+        } else if (error.request) {
+          // A solicitação foi feita, mas nenhuma resposta foi recebida
+          console.error("Erro na solicitação:", error.request);
+        } else {
+          // Alguma outra coisa aconteceu ao configurar a solicitação
+          console.error("Erro ao configurar a solicitação:", error.message);
+        }
       }
     },
     async deleteEmployee(id) {
