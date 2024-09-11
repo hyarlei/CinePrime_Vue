@@ -27,8 +27,8 @@ export default {
     return {
       movie: {},
       quantity: 1,
-      ticketType: "Inteira", // Default ticket type
-      sessionId: this.$route.params.sessionId, // Assume session ID is passed via route parameters
+      ticketType: "Inteira", // Tipo de ingresso padrão
+      sessionId: this.$route.params.sessionId, // Supondo que a ID da sessão é passada via parâmetros de rota
     };
   },
   created() {
@@ -50,19 +50,19 @@ export default {
       }
     },
     async purchaseTicket() {
-      try {
-        const ticketData = {
-          idUser: parseInt(localStorage.getItem("userId")),
-          idSession: this.sessionId,
-          type: this.ticketType,
-        };
+  try {
+    const ticketData = {
+      idUser: parseInt(localStorage.getItem("userId")),
+      idSession: this.sessionId,
+      type: this.ticketType,
+    };
 
-        await apiClient.post("/ticket", ticketData);
-        alert("Ingresso comprado com sucesso!");
-      } catch (error) {
-        console.error("Erro ao comprar ingresso:", error);
-      }
-    },
+    await apiClient.post('/ticket', ticketData);
+    alert('Ingresso comprado com sucesso!');
+  } catch (error) {
+    console.error("Erro ao comprar ingresso:", error);
+  }
+},
     getImageUrl(path) {
       return `https://image.tmdb.org/t/p/w500${path}`;
     },
