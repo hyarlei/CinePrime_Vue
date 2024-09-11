@@ -27,8 +27,8 @@ export default {
     return {
       movie: {},
       quantity: 1,
-      ticketType: "Inteira", // Default ticket type
-      sessionId: this.$route.params.sessionId, // Assume session ID is passed via route parameters
+      ticketType: "Inteira", // Tipo de ingresso padrão
+      sessionId: this.$route.params.sessionId, // Supondo que a ID da sessão é passada via parâmetros de rota
     };
   },
   created() {
@@ -50,19 +50,39 @@ export default {
       }
     },
     async purchaseTicket() {
-  try {
-    const ticketData = {
-      idUser: parseInt(localStorage.getItem("userId")),
-      idSession: this.sessionId,
-      type: this.ticketType,
-    };
+      try {
+        // Obter o ID do usuário armazenado no localStorage
+        const userId = parseInt(localStorage.getItem("userId"));
+        const token = localStorage.getItem("token");
 
-    await apiClient.post('/ticket', ticketData);
-    alert('Ingresso comprado com sucesso!');
-  } catch (error) {
-    console.error("Erro ao comprar ingresso:", error);
-  }
-},
+        if (!userId || !token) {
+          alert("Usuário não autenticado. Faça login para continuar.");
+          this.$router.push("/login"); // Redireciona para a página de login se o usuário não estiver autenticado
+          return;
+        }
+
+        // Dados a serem enviados para o backend
+        const ticketData = {
+          idUser: userId,
+          idSession: this.sessionId,
+          type: this.ticketType,
+        };
+
+        // Enviar a requisição para o backend com autenticação
+        const response = await apiClient.post('/ticket', ticketData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Adiciona o token JWT ao cabeçalho Authorization
+          },
+        });
+
+        // Exibir mensagem de sucesso
+        alert(response.data.message || 'Ingresso comprado com sucesso!');
+      } catch (error) {
+        console.error("Erro ao comprar ingresso:", error);
+        alert("Ocorreu um erro ao tentar comprar o ingresso.");
+      }
+    },
     getImageUrl(path) {
       return `https://image.tmdb.org/t/p/w500${path}`;
     },
