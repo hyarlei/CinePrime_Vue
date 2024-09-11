@@ -6,16 +6,20 @@
       <SessionForm
         :session="currentSession"
         :isEdit="isEdit"
-        :rooms="rooms"
         @save="saveSession"
         @cancel="cancelEdit"
       />
     </div>
     <div v-if="sessions.length">
       <div v-for="session in sessions" :key="session.id" class="session-item">
-        <p><strong>Filme:</strong> {{ getMovieTitle(session.movieId) }}</p>
-        <p><strong>Sala:</strong> {{ getRoomName(session.roomId) }}</p>
+        <p><strong>Filme:</strong> {{ session.movieTitle }}</p>
+        <p><strong>Sala:</strong> Sala {{ session.idRoom }}</p>
         <p><strong>Horário:</strong> {{ session.time }}</p>
+        <p><strong>Ingressos Atuais:</strong> {{ session.atualTicketsQtd }}</p>
+        <p>
+          <strong>Capacidade Máxima:</strong>
+          {{ session.maxTicketsQtd }} lugares
+        </p>
         <div class="buttons">
           <button class="edit" @click="editSession(session)">Editar</button>
           <button class="delete" @click="deleteSession(session.id)">
@@ -31,17 +35,8 @@
 </template>
 
 <script>
-// import { fetchSessions } from "@/service/sessionService";
 import axios from "axios";
 import SessionForm from "../components/SessionForm.vue";
-// import {
-//   createSession,
-//   deleteSession,
-//   fetchSessions,
-//   updateSession
-// } from "../service/sessionService";
-
-// import { fetchRooms } from "../service/roomService";
 
 export default {
   components: {
@@ -50,98 +45,21 @@ export default {
   data() {
     return {
       sessions: [],
-      movies: [],
-      rooms: [],
       showForm: false,
       isEdit: false,
       currentSession: {
-        id: null,
-        movieId: null,
+        movieTitle: "",
         roomId: null,
         time: "",
+        atualTicketsQtd: 0,
+        maxTicketsQtd: 0,
       },
     };
   },
-  async created() {
+  created() {
     this.fetchSessions();
-    this.fetchRooms();
   },
-  // methods: {
-  //   async loadSessions() {
-  //     try {
-  //       this.sessions = await fetchSessions();
-  //       console.log("Carregou as sessoes")
-  //     } catch (error) {
-  //       console.error("Erro ao carregar sessões:", error);
-  //     }
-  //   },
-  //   async loadRooms() {
-  //     try {
-  //       console.log("Carregou as salas")
-  //       this.rooms = await fetchRooms();
-  //     } catch (error) {
-  //       console.error("Erro ao carregar salas:", error);
-  //     }
-  //   },
-  //   getMovieTitle(movieId) {
-  //     const movie = this.movies.find((m) => m.id === movieId);
-  //     return movie ? movie.title : "Desconhecido";
-  //   },
-  //   getRoomName(roomId) {
-  //     const room = this.rooms.find((r) => r.id === roomId);
-  //     return room ? room.name : "Desconhecida";
-  //   },
-  //   addSession() {
-  //     this.showForm = true;
-  //     this.isEdit = false;
-  //     this.currentSession = {
-  //       id: null,
-  //       movieId: null,
-  //       roomId: null,
-  //       time: "",
-  //     };
-  //   },
-  //   async saveSession(session) {
-  //     try {
-  //       if (this.isEdit) {
-  //         await updateSession(session.id, session);
-  //       } else {
-  //         await createSession(session);
-  //       }
-  //       await this.loadSessions();
-  //       this.cancelEdit();
-  //     } catch (error) {
-  //       console.error("Erro ao salvar sessão:", error);
-  //     }
-  //   },
-  //   async deleteSession(id) {
-  //     try {
-  //       await deleteSession(id);
-  //       await this.loadSessions();
-  //     } catch (error) {
-  //       console.error("Erro ao excluir sessão:", error);
-  //     }
-  //   },
-  //   cancelEdit() {
-  //     this.showForm = false;
-  //   },
-  // },
-
   methods: {
-    async fetchRooms() {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3333/room", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.rooms = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar salas:", error);
-      }
-    },
     async fetchSessions() {
       try {
         const token = localStorage.getItem("token");
@@ -151,19 +69,21 @@ export default {
             Authorization: `Bearer ${token}`,
           },
         });
-        this.rooms = response.data;
+        this.sessions = response.data;
       } catch (error) {
-        console.error("Erro ao buscar salas:", error);
+        console.error("Erro ao buscar sessões:", error);
       }
     },
 
-    addRoom() {
+    addSession() {
       this.showForm = true;
       this.isEdit = false;
-      this.currentRoom = {
-        id: null,
-        qtd_max: 0,
-        typeExhibitionAccepted: "",
+      this.currentSession = {
+        movieTitle: "",
+        roomId: null,
+        time: "",
+        atualTicketsQtd: 0,
+        maxTicketsQtd: 0,
       };
     },
 
@@ -179,7 +99,7 @@ export default {
 
         const headers = {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          Authorization: `Bearer ${token}`,
         };
         if (this.isEdit) {
           await axios.put(
@@ -197,10 +117,10 @@ export default {
           );
           this.sessions.push(response.data);
         }
-        this.cancelEdit(); // Fecha o formulário
-        this.fetchSessions(); // Atualiza a lista de salas
+        this.cancelEdit();
+        this.fetchSessions();
       } catch (error) {
-        console.error("Erro ao salvar sala:", error);
+        console.error("Erro ao salvar sessão:", error);
       }
     },
 
@@ -211,17 +131,17 @@ export default {
         await axios.delete(`http://localhost:3333/session/${id}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
         this.fetchSessions();
       } catch (error) {
-        console.error("Erro ao excluir sala:", error);
+        console.error("Erro ao excluir sessão:", error);
       }
     },
 
     cancelEdit() {
-      this.showForm = false; // Fecha o formulário
+      this.showForm = false;
     },
   },
 };
@@ -229,9 +149,10 @@ export default {
 
 <style scoped>
 .session-list {
-  height: 100%;
   padding: 20px;
+  height: 100%;
 }
+
 .session-item {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -271,23 +192,17 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .delete {
-  background-color: #f44336;
+  background-color: red;
   width: 72px;
   padding: 10px;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.delete:hover {
-  background-color: #d32f2f;
-}
-
-.edit:hover {
-  background-color: #388e3c;
+  font-size: 16px;
 }
 </style>
