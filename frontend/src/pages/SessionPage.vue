@@ -14,7 +14,7 @@
       <div v-for="session in sessions" :key="session.id" class="session-item">
         <p><strong>Filme:</strong> {{ session.movieTitle }}</p>
         <p><strong>Sala:</strong> Sala {{ session.idRoom }}</p>
-        <p><strong>Horário:</strong> {{ session.dateTime }}</p>
+        <p><strong>Horário:</strong> {{ formatTime(session.dateTime) }}</p>
         <p><strong>Ingressos Atuais:</strong> {{ session.atualTicketsQtd }}</p>
         <p>
           <strong>Capacidade Máxima:</strong>
@@ -60,6 +60,12 @@ export default {
     this.fetchSessions();
   },
   methods: {
+    formatTime(dateTime) {
+      const date = new Date(dateTime);
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    },
     async fetchSessions() {
       try {
         const token = localStorage.getItem("token");
@@ -156,7 +162,7 @@ export default {
 <style scoped>
 .session-list {
   padding: 20px;
-  height: 100%;
+  min-height: 100%;
 }
 
 .session-item {

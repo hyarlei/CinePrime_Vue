@@ -5,14 +5,14 @@
       <div>
         <label for="movie">Filme:</label>
         <select v-model="localSession.movieTitle" required>
-          <option v-for="movie in movies" :key="movie.id" :value="movie.id">
+          <option v-for="movie in movies" :key="movie.id" :value="movie.title">
             {{ movie.title }}
           </option>
         </select>
       </div>
       <div>
         <label for="room">Sala:</label>
-        <select v-model="localSession.roomId" required>
+        <select v-model="localSession.idRoom" required>
           <option v-for="room in rooms" :key="room.id" :value="room.id">
             {{ room.id }}
           </option>
@@ -20,7 +20,7 @@
       </div>
       <div>
         <label for="time">Horário:</label>
-        <input v-model="localSession.dateTime" type="time" required />
+        <input v-model="formattedTime" type="time" required />
       </div>
       <div>
         <label for="maxTicketsQtd">Quantidade Máxima de Ingressos:</label>
@@ -54,6 +54,34 @@ export default {
       localSession: { ...this.session },
     };
   },
+  computed: {
+    // Formatar o horário no formato HH:mm para o campo de input
+    formattedTime: {
+      get() {
+        if (this.localSession.dateTime) {
+          const date = new Date(this.localSession.dateTime);
+          const hours = date.getHours().toString().padStart(2, "0");
+          const minutes = date.getMinutes().toString().padStart(2, "0");
+          return `${hours}:${minutes}`;
+        }
+        return "";
+      },
+      set(value) {
+        if (value) {
+          const [hours, minutes] = value.split(":");
+          const date = new Date(this.localSession.dateTime || new Date());
+          date.setHours(hours, minutes);
+          this.localSession.dateTime = date;
+        }
+      },
+    },
+  },
+  watch: {
+    // Observa mudanças em maxTicketsQtd e atualiza atualTicketsQtd automaticamente
+    "localSession.maxTicketsQtd"(newValue) {
+      this.localSession.atualTicketsQtd = newValue;
+    },
+  },
   async created() {
     try {
       this.movies = await fetchPopularMovies();
@@ -67,21 +95,12 @@ export default {
       console.error("Erro ao carregar salas:", error);
     }
   },
-  watch: {
-    session: {
-      handler(newSession) {
-        this.localSession = { ...newSession };
-      },
-      deep: true,
-    },
-  },
   methods: {
     submitForm() {
-      this.localSession.atualTicketsQtd = this.localSession.maxTicketsQtd;
+      const dateTime = new Date(this.localSession.dateTime).toISOString();
+      this.localSession.dateTime = dateTime;
 
-      // Formatar a data e hora no formato ISO 8601
-      // const dateTime = new Date(this.localSession.dateTime).toISOString();
-      // this.localSession.dateTime = dateTime;
+      this.localSession.atualTicketsQtd = this.localSession.maxTicketsQtd;
 
       console.log("Dados da sessão antes do envio:", this.localSession);
       this.$emit("save", this.localSession);
