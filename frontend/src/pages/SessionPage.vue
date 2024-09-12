@@ -49,7 +49,7 @@ export default {
       isEdit: false,
       currentSession: {
         movieTitle: "",
-        roomId: null,
+        idRoom: null,
         dateTime: "",
         atualTicketsQtd: 0,
         maxTicketsQtd: 0,
@@ -86,7 +86,7 @@ export default {
       this.isEdit = false;
       this.currentSession = {
         movieTitle: "",
-        roomId: null,
+        idRoom: null,
         dateTime: "",
         atualTicketsQtd: 0,
         maxTicketsQtd: 0,

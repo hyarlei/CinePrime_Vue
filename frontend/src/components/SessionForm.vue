@@ -12,7 +12,7 @@
       </div>
       <div>
         <label for="room">Sala:</label>
-        <select v-model="localSession.idRoom" required>
+        <select v-model="localSession.idRoom" @change="updateMaxTicketsQtd" required>
           <option v-for="room in rooms" :key="room.id" :value="room.id">
             {{ room.id }}
           </option>
@@ -21,10 +21,6 @@
       <div>
         <label for="time">Horário:</label>
         <input v-model="formattedTime" type="time" required />
-      </div>
-      <div>
-        <label for="maxTicketsQtd">Quantidade Máxima de Ingressos:</label>
-        <input v-model="localSession.maxTicketsQtd" type="number" required />
       </div>
       <button type="submit">{{ isEdit ? "Atualizar" : "Adicionar" }}</button>
       <button @click="$emit('cancel')" type="button">Cancelar</button>
@@ -55,7 +51,6 @@ export default {
     };
   },
   computed: {
-    // Formatar o horário no formato HH:mm para o campo de input
     formattedTime: {
       get() {
         if (this.localSession.dateTime) {
@@ -77,7 +72,7 @@ export default {
     },
   },
   watch: {
-    // Observa mudanças em maxTicketsQtd e atualiza atualTicketsQtd automaticamente
+    // Atualiza a quantidade de ingressos disponíveis automaticamente
     "localSession.maxTicketsQtd"(newValue) {
       this.localSession.atualTicketsQtd = newValue;
     },
@@ -94,13 +89,23 @@ export default {
     } catch (error) {
       console.error("Erro ao carregar salas:", error);
     }
+
+    // Se estiver editando, carregar os valores corretos
+    if (this.isEdit && this.localSession.idRoom) {
+      this.updateMaxTicketsQtd();
+    }
   },
   methods: {
+    updateMaxTicketsQtd() {
+      const selectedRoom = this.rooms.find(room => room.id === this.localSession.idRoom);
+      if (selectedRoom) {
+        this.localSession.maxTicketsQtd = selectedRoom.qtd_max;
+        this.localSession.atualTicketsQtd = selectedRoom.qtd_max;
+      }
+    },
     submitForm() {
       const dateTime = new Date(this.localSession.dateTime).toISOString();
       this.localSession.dateTime = dateTime;
-
-      this.localSession.atualTicketsQtd = this.localSession.maxTicketsQtd;
 
       console.log("Dados da sessão antes do envio:", this.localSession);
       this.$emit("save", this.localSession);
