@@ -110,19 +110,11 @@ export default {
             password: this.senha,
           };
 
-          const response = await axios.post(
-            "http://localhost:3333/user",
-            userData
-          );
+          // Envia os dados do usuário para o backend para criação
+          const response = await axios.post("http://localhost:3333/user", userData);
 
-          // Verifique se o cadastro foi bem-sucedido
+          // Verifica se o cadastro foi bem-sucedido
           if (response.status === 201) {
-            // Recebe o token da resposta
-            const token = response.data.token;
-
-            // Armazena o token no localStorage
-            localStorage.setItem("token", token);
-
             // Mensagem de sucesso
             alert("Usuário cadastrado com sucesso!");
 
@@ -135,22 +127,17 @@ export default {
             this.confirmarSenha = "";
             this.mensagemErro = "";
 
-            // Redireciona o usuário para outra página (por exemplo, a página principal)
-            this.$router.push("/");
+            // Redireciona o usuário para a página de login
+            this.$router.push("/login");
           } else {
             this.mensagemErro = "Erro ao cadastrar usuário.";
           }
         } catch (error) {
           console.error("Erro na requisição:", error.response);
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.message
-          ) {
+          if (error.response && error.response.data && error.response.data.message) {
             this.mensagemErro = error.response.data.message;
           } else {
-            this.mensagemErro =
-              "Erro ao cadastrar usuário. Tente novamente mais tarde.";
+            this.mensagemErro = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
           }
         }
       } else {

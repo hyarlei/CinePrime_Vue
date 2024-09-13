@@ -95,10 +95,14 @@ export default {
     async saveEmployee(employee) {
       try {
         const token = localStorage.getItem("token");
+        console.log("Token:", token); // Verifique o valor do token
+
         const headers = {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          Authorization: `Bearer ${token}`,
         };
+
+        console.log("Headers:", headers); // Verifique os cabeçalhos
 
         console.log("Dados do funcionário:", employee);
 

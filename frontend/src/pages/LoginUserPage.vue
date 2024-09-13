@@ -16,14 +16,14 @@
       </form>
       <span
         >Não possui cadastro? Registre-se
-        <routerLink class="link" to="/cadastro">aqui</routerLink></span
+        <router-link class="link" to="/cadastro">aqui</router-link></span
       >
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -42,36 +42,19 @@ export default {
     async submitForm() {
       if (this.todosPreenchidos) {
         try {
-          const response = await axios.post("http://localhost:3333/auth", {
-            email: this.email,
-            password: this.senha,
-          });
-
-          // Verifique o que está sendo retornado pela API
-          // console.log(response.data.user.token);
-
-          // Verifique se a resposta contém o token corretamente
-          const token = response.data.user.token;
-
-          if (token) {
-            // Armazena o token no localStorage
-            localStorage.setItem("token", token);
-
-            // Redireciona o usuário
-            this.$router.push("/");
-          } else {
-            // Caso o token não esteja presente, exibe um erro
-            this.mensagemErro = "Token não retornado pela API.";
-          }
+          // Use a ação do Vuex para fazer login
+          await this.login({ email: this.email, password: this.senha });
+          
+          // Redireciona o usuário após o login
+          this.$router.push("/");
         } catch (error) {
-          this.mensagemErro =
-            "Falha no login: " +
-            (error.response?.data.message || error.message);
+          this.mensagemErro = "Falha no login: " + (error.response?.data.message || error.message);
         }
       } else {
         this.mensagemErro = "Por favor, preencha todos os campos.";
       }
     },
+    ...mapActions(['login']), // Mapeia a ação 'login' do Vuex
   },
 };
 </script>

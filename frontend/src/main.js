@@ -1,11 +1,14 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './routes/router';
-// import store from './store';
+import store from './store';  // Importe o Vuex store
 
 const app = createApp(App);
 
-app.use(router).mount('#app');
-// app.use(store);
-// Inicializar a store com o token salvo, se houver
-// store.dispatch('initializeStore');
+// Certifique-se de usar o Vuex e o router
+app.use(store);
+app.use(router);
+
+store.dispatch('initializeStore');
+
+app.mount('#app');
