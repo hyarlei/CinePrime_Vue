@@ -25,7 +25,7 @@ const routes = [
       console.log('isAuthenticated:', isAuthenticated);
       console.log('userRole:', userRole);
 
-      if (isAuthenticated && userRole === 'employee') {
+      if (isAuthenticated && userRole === 'adm') {
         next();
       } else {
         next('/login');
@@ -41,7 +41,7 @@ const routes = [
       console.log('isAuthenticated:', isAuthenticated);
       console.log('userRole:', userRole);
 
-      if (isAuthenticated && userRole === 'employee') {
+      if (isAuthenticated && userRole === 'employee' || isAuthenticated && userRole === 'adm') {
         next();
       } else {
         next('/login');
@@ -55,7 +55,7 @@ const routes = [
       console.log('isAuthenticated:', isAuthenticated);
       console.log('userRole:', userRole);
 
-      if (isAuthenticated && userRole === 'employee') {
+      if (isAuthenticated && userRole === 'employee' || isAuthenticated && userRole === 'adm') {
         next();
       } else {
         next('/login');

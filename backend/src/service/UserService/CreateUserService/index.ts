@@ -108,7 +108,7 @@ export class CreateUserService {
 					},
 					data: {
 						isAdmin: true,
-						profile: 'employee',
+						profile: 'adm',
 					},
 				});
 			}
