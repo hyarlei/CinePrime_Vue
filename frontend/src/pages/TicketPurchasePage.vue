@@ -117,6 +117,8 @@ export default {
         );
 
         alert("Ingresso comprado com sucesso!");
+
+        this.$router.push("/");
       } catch (error) {
         console.error("Erro ao comprar ingresso:", error);
       }
