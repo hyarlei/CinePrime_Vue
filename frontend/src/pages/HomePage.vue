@@ -1,9 +1,10 @@
 <template>
   <div class="home">
     <h1>Bem vindo ao Cine Prime</h1>
-    <p>A melhor plataforma de gerenciamento de cinemas da região!</p>
-
-    <button @click="handleSubmit">Sobre a equipe Cine Prime</button>
+    <h2>A melhor plataforma de gerenciamento de cinemas da região!</h2>
+    <div>
+      <button @click="handleSubmit">Sobre a equipe Cine Prime</button>
+    </div>
   </div>
 </template>
 
@@ -22,6 +23,9 @@ export default {
 
 <style scoped>
 .home {
-  height: calc(100% - 180px) ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100% - 180px);
 }
 </style>

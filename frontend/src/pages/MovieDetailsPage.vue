@@ -4,15 +4,14 @@
     <img :src="getImageUrl(movie.poster_path)" alt="Poster do filme" />
     <p>{{ movie.overview }}</p>
 
-    <router-link :to="{ name: 'TicketPurchase', params: { id: movie.id } }">
-      Comprar Ingresso
-    </router-link>
+    <button @click="checkAuthAndRedirect">Comprar Ingresso</button>
   </div>
 </template>
 
 <script>
 import apiClient from "../api/axiosConfig";
 import { API_KEY } from "../api/config";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -25,6 +24,9 @@ export default {
     return {
       movie: null,
     };
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
   },
   created() {
     this.fetchMovieDetails();
@@ -45,6 +47,14 @@ export default {
     },
     getImageUrl(path) {
       return `https://image.tmdb.org/t/p/w500${path}`;
+    },
+    checkAuthAndRedirect() {
+      if (this.isAuthenticated) {
+        this.$router.push({ name: 'TicketPurchase', params: { id: this.movie.id } });
+      } else {
+        alert("Você precisa estar logado para comprar ingressos.");
+        this.$router.push('/login');
+      }
     },
   },
 };
