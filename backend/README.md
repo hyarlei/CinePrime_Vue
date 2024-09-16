@@ -1,69 +1,131 @@
-<h1 align="center">Cine🍿Prime</h1>
+<h1 align="center">Cine🍿Prime - Backend</h1>
 
-:smiley::rocket:Seja Seja bem-vindo ao repositório do backend da CinePrime. Aqui, iremos guiá-lo para que você consiga instalar e configurar o ambiente de desenvolvimento. Certifique-se de ter previamente o Node.js e o Git instalados em seu computador.
+Bem-vindo ao repositório do **backend** da aplicação CinePrime. Aqui você encontrará as informações necessárias para configurar e rodar o ambiente de desenvolvimento da aplicação.
 
-**01: Como baixar  o projeto inicial**
+## Índice
 
-Clone o repositório em seu computador
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Configuração](#configuração)
+- [Rodando o servidor](#rodando-o-servidor)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Licença](#licença)
 
-    git clone https://github.com/hyarlei/-cine-prime.git
+## Pré-requisitos
 
-Acesse o diretório do projeto
+Antes de começar, certifique-se de ter as seguintes ferramentas instaladas na sua máquina:
 
-    cd Cinema
+- [Node.js](https://nodejs.org/en/) - Versão 14 ou superior
+- [npm](https://www.npmjs.com/) ou [Yarn](https://yarnpkg.com/) - Gerenciador de pacotes
+- [Git](https://git-scm.com) - Controle de versão
 
-Instale as dependências do projeto usando o gerenciador de pacotes npm ou yarn:
+## Instalação
 
-    npm install ou yarn install
+Siga os passos abaixo para instalar e configurar o projeto na sua máquina local:
 
-**02: Como configurar o Docker**
+```bash
+git clone https://github.com/hyarlei/CinePrime_Vue.git
+```
 
-Primeiro Certifique-se de ter o Docker instalado em sua maquina.
+Acesse o diretório do projeto:
 
-> **Windows** https://docs.docker.com/desktop/install/windows-install/
->**Linux** https://docs.docker.com/desktop/install/linux-install/
+```bash
+cd CinePrime_Vue
+```
 
-Na pasta raiz do seu projeto execute o seguinte comando para iniciar o docker
+## Configuração
 
-    docker-compose up -d
+Instale todas as dependências necessárias com o gerenciador de pacotes de sua preferência (npm ou yarn):
 
-Pronto, seu docker está configurado.
+```bash
+npm install
+```
 
-**03: Configurar o Arquivo .env**
+ou
 
-Defina as seguintes variáveis de ambiente no arquivo .env e edite retirando o nome .env.example:
+```bash
+yarn install
+```
 
-    DATABASE_URL="postgres://username:password@localhost:5432/nome_do_banco"
+## Variáveis de Ambiente (.env)
 
-Certifique-se de substituir username e password pelas suas credenciais de acesso ao banco de dados PostgreSQL.
+Crie um arquivo `.env` na raiz do projeto e defina as seguintes variáveis de ambiente:
 
-**04: Execute as migrações do banco de dados para criar as tabelas necessárias:**
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="sua_chave_secreta_aqui"
+```
 
-    npx prisma migrate dev
-		    ou
-    yarn prisma migrate dev
+**Nota:** Renomeie o arquivo `.env.example` para `.env` e configure as variáveis conforme necessário.
 
-Execute o projeto
+## Executar Migrações
 
-    npm run dev
+Para configurar o banco de dados e criar as tabelas necessárias, execute as migrações:
 
-	    ou
+```bash
+npx prisma migrate dev
+```
 
-    yarn dev
+ou
 
-Sucesso :rocket::rocket::rocket: Cine🍿Prime estará disponível em http://localhost:3333/. Você pode acessar esta URL em seu navegador para utilizar o projeto.
+```bash
+yarn prisma migrate dev
+```
 
-# Visão Geral
+## Rodando o servidor
 
-CinePrime é uma aplicação de gerenciamento de cinema, que permite cadastrar sessões de filmes, listar sessões disponíveis, cadastrar e listar filmes, cadastrar compradores, gerenciar ingressos e realizar compras de ingressos. O objetivo da aplicação é fornecer uma plataforma para que os usuários possam encontrar informações sobre sessões de filmes, comprar ingressos e gerenciar suas compras.
+Agora, inicie o servidor da aplicação com o comando:
 
-### Tecnologias
+```bash
+npm run server
+```
 
-Para criar essa aplicação, utilizei as seguintes tecnologias:
+ou
 
-Banco de Dados: Postgres,
-Linguagem de Programação: Typescript,
-Framework Web e biblioteca: Express e Node.js,
-ORM: Prisma ORM,
-Gerenciador de Containers: Docker,
-Autenticação: JWT.
+```bash
+yarn server
+```
+
+A aplicação estará disponível em: **[http://localhost:3333](http://localhost:3333)**
+
+## Estrutura do Projeto
+
+Abaixo, uma visão geral da estrutura de diretórios da aplicação:
+
+```
+├── prisma/                   # Arquivos de esquema do banco e migrações.
+├── src/                      # Código fonte principal
+│   ├── controllers/          # Lógica dos controladores
+│   ├── middleware/           # Middleware da aplicação
+│   ├── routes/               # Configuração de rotas
+│   ├── service/              # Serviços da aplicação
+│   └── server.js             # Ponto de entrada do servidor
+└── package.json              # Arquivo de dependências e scripts
+```
+
+## Visão Geral
+
+CinePrime é uma aplicação de gerenciamento de cinema que permite aos funcionários controlar salas de cinema, sessões de filmes e ingressos. O administrador tem acesso a todas as funcionalidades, enquanto os usuários podem visualizar filmes e realizar compras de ingressos.
+
+## Funcionalidades Principais
+
+- Cadastro e gerenciamento de sessões de cinema
+- Listagem de sessões disponíveis e detalhes dos filmes
+- Cadastro de usuários (clientes, funcionários e administradores)
+- Compra e gerenciamento de ingressos
+- Autenticação e autorização de usuários com JWT
+
+## Tecnologias Utilizadas
+
+O backend da CinePrime foi desenvolvido utilizando as seguintes tecnologias:
+
+- **Node.js** e **Express**: Para o desenvolvimento da API
+- **TypeScript**: Para tipagem estática e desenvolvimento mais seguro
+- **Prisma ORM**: Para manipulação e integração com o banco de dados
+- **PostgreSQL**: Banco de dados relacional utilizado no projeto
+- **JWT (JSON Web Token)**: Para autenticação e autorização de usuários
+
+## Licença
+
+Este projeto está sob a licença MIT. Sinta-se à vontade para clonar e modificar conforme necessário.
