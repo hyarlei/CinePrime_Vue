@@ -72,7 +72,7 @@ A aplicação é dividida entre o frontend e o backend, cada um com seu próprio
 | Movie    |     |  X  |     |     |
 | Session  |  X  |  X  |  X  |  X  |
 | Room     |  X  |  X  |  X  |  X  |
-| Ticket   |  X  |  X  |  X  |  X  |
+| Ticket   |  X  |  X  |     |     |
 | Employer |  X  |  X  |  X  |  X  |
 
 ## Rotas da API REST utilizadas
