@@ -2,34 +2,42 @@
   <div class="employee-form">
     <h2>{{ isEdit ? "Editar Funcionário" : "Adicionar Funcionário" }}</h2>
     <form @submit.prevent="submitForm">
-      <div>
-        <label for="nome">Nome:</label>
-        <input v-model="localEmployee.nome" type="text" required />
+      <div class="container">
+        <div class="label">
+          <label for="nome">Nome:</label>
+          <input v-model="localEmployee.nome" type="text" required />
+        </div>
+        <div class="label">
+          <label for="email">Email:</label>
+          <input v-model="localEmployee.email" type="email" required />
+        </div>
+        <div class="label">
+          <label for="cpf">CPF:</label>
+          <input v-model="localEmployee.cpf" required />
+        </div>
+        <div class="label">
+          <label for="telefone">Telefone:</label>
+          <input
+            v-model="localEmployee.telefone"
+            @input="formatarTelefone"
+            type="text"
+            id="telefone"
+            required
+          />
+        </div>
+        <div class="label">
+          <label for="password">Senha:</label>
+          <input v-model="localEmployee.password" type="password" required />
+        </div>
+        <div>
+          <button class="actions" type="submit">
+            {{ isEdit ? "Atualizar" : "Salvar" }}
+          </button>
+          <button class="actions" type="button" @click="$emit('cancel')">
+            Cancelar
+          </button>
+        </div>
       </div>
-      <div>
-        <label for="email">Email:</label>
-        <input v-model="localEmployee.email" type="email" required />
-      </div>
-      <div>
-        <label for="cpf">CPF:</label>
-        <input v-model="localEmployee.cpf" placeholder="CPF" required />
-      </div>
-      <div>
-        <label for="telefone">Telefone:</label>
-        <input
-          v-model="localEmployee.telefone"
-          @input="formatarTelefone"
-          type="text"
-          id="telefone"
-          required
-        />
-      </div>
-      <div>
-        <label for="password">Senha:</label>
-        <input v-model="localEmployee.password" type="password" required />
-      </div>
-      <button type="submit">{{ isEdit ? "Atualizar" : "Salvar" }}</button>
-      <button type="button" @click="$emit('cancel')">Cancelar</button>
     </form>
   </div>
 </template>
@@ -92,6 +100,40 @@ export default {
   background-color: #f9f9f9;
   margin-bottom: 20px;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 40%;
+}
+
+.label {
+  display: flex;
+}
+
+.label input {
+  width: 100%;
+  justify-content: flex-start;
+  margin-left: 6px;
+}
+
+.actions {
+  width: 96px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  font-size: 1em;
+  margin-bottom: 16px;
+}
+
+.actions:hover {
+  background-color: #0056b3;
+}
+
 form div {
   margin-bottom: 12px;
 }

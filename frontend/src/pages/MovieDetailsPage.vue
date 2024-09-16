@@ -2,9 +2,9 @@
   <div v-if="movie">
     <h1>{{ movie.title }}</h1>
     <img :src="getImageUrl(movie.poster_path)" alt="Poster do filme" />
-    <p>{{ movie.overview }}</p>
+    <h3>{{ movie.overview }}</h3>
 
-    <button @click="checkAuthAndRedirect">Comprar Ingresso</button>
+    <button class="btn" @click="checkAuthAndRedirect">Comprar Ingresso</button>
   </div>
 </template>
 
@@ -50,10 +50,13 @@ export default {
     },
     checkAuthAndRedirect() {
       if (this.isAuthenticated) {
-        this.$router.push({ name: 'TicketPurchase', params: { id: this.movie.id } });
+        this.$router.push({
+          name: "TicketPurchase",
+          params: { id: this.movie.id },
+        });
       } else {
         alert("Você precisa estar logado para comprar ingressos.");
-        this.$router.push('/login');
+        this.$router.push("/login");
       }
     },
   },
@@ -61,5 +64,35 @@ export default {
 </script>
 
 <style scoped>
-/* Estilize a página de detalhes como desejar */
+img {
+  border-radius: 14px;
+  width: 25%;
+}
+
+h3 {
+  padding: 0 25%;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  font-size: 1em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  background-color: #004080;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+}
 </style>

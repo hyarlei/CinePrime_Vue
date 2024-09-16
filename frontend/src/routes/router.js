@@ -13,7 +13,6 @@ import TicketPurchasePage from '../pages/TicketPurchasePage.vue';
 console.log('User authenticated:', store.getters.isAuthenticated);
 console.log('User role:', store.getters.userRole);
 
-
 const routes = [
   { path: "/", component: HomePage },
   { path: "/cadastro", component: LogupUserPage },

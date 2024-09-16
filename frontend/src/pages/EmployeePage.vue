@@ -95,14 +95,11 @@ export default {
     async saveEmployee(employee) {
       try {
         const token = localStorage.getItem("token");
-        console.log("Token:", token); // Verifique o valor do token
 
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
-
-        console.log("Headers:", headers); // Verifique os cabeçalhos
 
         console.log("Dados do funcionário:", employee);
 
@@ -134,13 +131,10 @@ export default {
         this.fetchEmployees();
       } catch (error) {
         if (error.response) {
-          // A resposta foi recebida com um código de status que não está na faixa de 2xx
           console.error("Erro na resposta:", error.response.data);
         } else if (error.request) {
-          // A solicitação foi feita, mas nenhuma resposta foi recebida
           console.error("Erro na solicitação:", error.request);
         } else {
-          // Alguma outra coisa aconteceu ao configurar a solicitação
           console.error("Erro ao configurar a solicitação:", error.message);
         }
       }
@@ -151,7 +145,7 @@ export default {
         await axios.delete(`http://localhost:3333/employee/${id}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
         this.fetchEmployees();

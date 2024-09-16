@@ -110,15 +110,11 @@ export default {
             password: this.senha,
           };
 
-          // Envia os dados do usuário para o backend para criação
           const response = await axios.post("http://localhost:3333/user", userData);
 
-          // Verifica se o cadastro foi bem-sucedido
           if (response.status === 201) {
-            // Mensagem de sucesso
             alert("Usuário cadastrado com sucesso!");
 
-            // Limpa o formulário
             this.nome = "";
             this.cpf = "";
             this.telefone = "";
@@ -127,7 +123,6 @@ export default {
             this.confirmarSenha = "";
             this.mensagemErro = "";
 
-            // Redireciona o usuário para a página de login
             this.$router.push("/login");
           } else {
             this.mensagemErro = "Erro ao cadastrar usuário.";

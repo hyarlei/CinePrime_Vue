@@ -39,8 +39,8 @@ export default {
   data() {
     return {
       movie: {},
-      sessions: [], // Inicializado como array vazio para evitar erros
-      selectedSessionId: null, // ID da sessão selecionada
+      sessions: [],
+      selectedSessionId: null,
       quantity: 1,
       ticketType: "Inteira",
     };
@@ -57,7 +57,7 @@ export default {
     },
   },
   async created() {
-    await this.fetchMovieDetails(); // Certifique-se de que o filme foi carregado primeiro
+    await this.fetchMovieDetails();
     try {
       this.sessions = await fetchSessions();
       console.log(this.sessions);
@@ -76,7 +76,6 @@ export default {
     },
     async submitForm() {
       try {
-        // Encontra a sessão selecionada
         const selectedSession = this.sessions.find(
           (session) => session.id === this.selectedSessionId
         );
@@ -86,19 +85,16 @@ export default {
           return;
         }
 
-        // Verifica se há ingressos suficientes
         if (selectedSession.atualTicketsQtd < this.quantity) {
           alert("Ingressos insuficientes disponíveis.");
           return;
         }
 
-        // Subtrai a quantidade de ingressos disponíveis
         selectedSession.atualTicketsQtd -= this.quantity;
 
         console.log(selectedSession.atualTicketsQtd);
         const token = localStorage.getItem("token");
 
-        // Atualiza o backend com a nova quantidade de ingressos disponíveis
         await api.put(
           `/session/${this.selectedSessionId}`,
           {

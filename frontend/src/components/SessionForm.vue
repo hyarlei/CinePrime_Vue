@@ -12,7 +12,11 @@
       </div>
       <div>
         <label for="room">Sala:</label>
-        <select v-model="localSession.idRoom" @change="updateMaxTicketsQtd" required>
+        <select
+          v-model="localSession.idRoom"
+          @change="updateMaxTicketsQtd"
+          required
+        >
           <option v-for="room in rooms" :key="room.id" :value="room.id">
             {{ room.id }}
           </option>
@@ -22,8 +26,8 @@
         <label for="time">Horário:</label>
         <input v-model="formattedTime" type="time" required />
       </div>
-      <button type="submit">{{ isEdit ? "Atualizar" : "Adicionar" }}</button>
-      <button @click="$emit('cancel')" type="button">Cancelar</button>
+      <button class="actions" type="submit">{{ isEdit ? "Atualizar" : "Adicionar" }}</button>
+      <button class="actions" @click="$emit('cancel')" type="button">Cancelar</button>
     </form>
   </div>
 </template>
@@ -97,7 +101,9 @@ export default {
   },
   methods: {
     updateMaxTicketsQtd() {
-      const selectedRoom = this.rooms.find(room => room.id === this.localSession.idRoom);
+      const selectedRoom = this.rooms.find(
+        (room) => room.id === this.localSession.idRoom
+      );
       if (selectedRoom) {
         this.localSession.maxTicketsQtd = selectedRoom.qtd_max;
         this.localSession.atualTicketsQtd = selectedRoom.qtd_max;
@@ -121,6 +127,24 @@ export default {
   padding: 16px;
   background-color: #f9f9f9;
 }
+
+.actions {
+  width: 96px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  font-size: 1em;
+  margin-bottom: 16px;
+  margin-right: 8px;
+}
+
+.actions:hover {
+  background-color: #0056b3;
+}
+
 form div {
   margin-bottom: 12px;
 }

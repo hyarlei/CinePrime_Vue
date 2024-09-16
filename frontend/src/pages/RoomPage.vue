@@ -90,7 +90,7 @@ export default {
 
         const headers = {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+          Authorization: `Bearer ${token}`,
         };
         if (this.isEdit) {
           await axios.put(`http://localhost:3333/room/${room.id}`, room, {
@@ -104,8 +104,8 @@ export default {
           );
           this.rooms.push(response.data);
         }
-        this.cancelEdit(); // Fecha o formulário
-        this.fetchRooms(); // Atualiza a lista de salas
+        this.cancelEdit();
+        this.fetchRooms();
       } catch (error) {
         console.error("Erro ao salvar sala:", error);
       }
@@ -118,7 +118,7 @@ export default {
         await axios.delete(`http://localhost:3333/room/${id}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Passando o token pelo cabeçalho
+            Authorization: `Bearer ${token}`,
           },
         });
         this.fetchRooms();
@@ -128,7 +128,7 @@ export default {
     },
 
     cancelEdit() {
-      this.showForm = false; // Fecha o formulário
+      this.showForm = false;
     },
   },
 };

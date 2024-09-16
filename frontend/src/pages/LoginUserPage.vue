@@ -7,23 +7,37 @@
           <label for="email">E-mail:</label>
           <input type="email" id="email" v-model="email" required />
         </div>
-        <div class="form-group">
+        <div class="form-group senha-group">
           <label for="senha">Senha:</label>
-          <input type="password" id="senha" v-model="senha" required />
+          <input
+            :type="mostrarSenha ? 'text' : 'password'"
+            id="senha"
+            v-model="senha"
+            required
+          />
+          <button
+            type="button"
+            class="mostrar-senha"
+            @click="toggleMostrarSenha"
+          >
+            <span class="material-symbols-outlined">
+              {{ mostrarSenha ? "visibility_off" : "visibility" }}
+            </span>
+          </button>
         </div>
         <button type="submit" :disabled="!todosPreenchidos">Entrar</button>
         <div v-if="mensagemErro" class="erro">{{ mensagemErro }}</div>
       </form>
-      <span
-        >Não possui cadastro? Registre-se
-        <router-link class="link" to="/cadastro">aqui</router-link></span
-      >
+      <span>
+        Não possui cadastro? Registre-se
+        <router-link class="link" to="/cadastro">aqui</router-link>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -31,6 +45,7 @@ export default {
       email: "",
       senha: "",
       mensagemErro: "",
+      mostrarSenha: false,
     };
   },
   computed: {
@@ -39,22 +54,25 @@ export default {
     },
   },
   methods: {
+    toggleMostrarSenha() {
+      this.mostrarSenha = !this.mostrarSenha;
+    },
     async submitForm() {
       if (this.todosPreenchidos) {
         try {
-          // Use a ação do Vuex para fazer login
           await this.login({ email: this.email, password: this.senha });
-          
-          // Redireciona o usuário após o login
+
           this.$router.push("/");
         } catch (error) {
-          this.mensagemErro = "Falha no login: " + (error.response?.data.message || error.message);
+          this.mensagemErro =
+            "Falha no login: " +
+            (error.response?.data.message || error.message);
         }
       } else {
         this.mensagemErro = "Por favor, preencha todos os campos.";
       }
     },
-    ...mapActions(['login']), // Mapeia a ação 'login' do Vuex
+    ...mapActions(["login"]),
   },
 };
 </script>
@@ -92,6 +110,9 @@ label {
   display: block;
   margin-bottom: 5px;
 }
+.senha-group {
+  position: relative;
+}
 
 input {
   width: 100%;
@@ -99,6 +120,22 @@ input {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.mostrar-senha {
+  width: auto;
+  position: absolute;
+  left: 256px;
+  top: 74%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #333333;
+  cursor: pointer;
+}
+
+.mostrar-senha:hover {
+  color: #0056b3;
 }
 
 button {
@@ -112,6 +149,7 @@ button {
   font-size: 16px;
   margin-bottom: 16px;
 }
+
 .link {
   text-decoration: none;
   color: #007bff;

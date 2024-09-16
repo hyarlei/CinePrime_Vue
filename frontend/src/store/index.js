@@ -30,6 +30,8 @@ const store = createStore({
         const token = response.data.user.token;
         const role = response.data.user.profile;
 
+        console.log(response.data.user.nome)
+
         if (token) {
           commit("setToken", token);
           commit("setRole", role);

@@ -64,18 +64,3 @@ export async function deleteSession(sessionId) {
     console.error("Erro ao excluir sessão:", error);
   }
 }
-
-// export async function deleteSession(sessionId) {
-//   try {
-//     const token = getToken();
-//     const response = await api.delete(`/session/${sessionId}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error("Erro ao deletar sessão:", error);
-//     throw error;
-//   }
-// }
