@@ -1,5 +1,5 @@
 <template>
-  <div v-if="movie">
+  <div class="content" v-if="movie">
     <h1>{{ movie.title }}</h1>
     <img :src="getImageUrl(movie.poster_path)" alt="Poster do filme" />
     <h3>{{ movie.overview }}</h3>
@@ -64,6 +64,10 @@ export default {
 </script>
 
 <style scoped>
+.content{
+min-height: 100%;
+}
+
 img {
   border-radius: 14px;
   width: 25%;

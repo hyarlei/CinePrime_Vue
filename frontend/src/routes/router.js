@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import store from '../store'; // Importe o store
+import store from '../store';
 
 import EmployeePage from "@/pages/EmployeePage.vue";
 import HomePage from "@/pages/HomePage.vue";

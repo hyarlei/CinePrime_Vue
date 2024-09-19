@@ -135,6 +135,7 @@ export default {
 
 <style scoped>
 .ticket-purchase {
+  min-height: 100%;
   text-align: center;
 }
 

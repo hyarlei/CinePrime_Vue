@@ -1,66 +1,67 @@
-import api from "../api/Api";
+import axios from "axios";
 
-// Função para obter o token, supondo que está no localStorage
-function getToken() {
-  return localStorage.getItem("token"); // Ou adapte conforme onde está armazenando o token
-}
+const API_URL = "http://localhost:3333/session";
 
-export async function createSession(sessionData) {
-  try {
-    const token = getToken();
-    const response = await api.post("/session", sessionData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao criar sessão:", error);
-    throw error;
-  }
-}
+const token = () => localStorage.getItem("token");
 
-export async function updateSession(sessionId, sessionData) {
-  try {
-    const token = getToken();
-    const response = await api.put(`/session/${sessionId}`, sessionData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao atualizar sessão:", error);
-    throw error;
-  }
-}
+const sessionService = {
+  async fetchSessions() {
+    try {
+      const response = await axios.get(API_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao buscar sessões:", error);
+      throw error;
+    }
+  },
 
-export async function fetchSessions() {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await api.get("/session", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao buscar salas:", error);
-  }
-}
+  async addSession(session) {
+    try {
+      const response = await axios.post(API_URL, session, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao adicionar sessão:", error);
+      throw error;
+    }
+  },
 
-export async function deleteSession(sessionId) {
-  try {
-    const token = getToken();
-    await api.delete(`room/${sessionId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    this.fetchSession();
-  } catch (error) {
-    console.error("Erro ao excluir sessão:", error);
-  }
-}
+  async editSession(id, session) {
+    try {
+      await axios.put(`${API_URL}/${id}`, session, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token()}`,
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao editar sessão:", error);
+      throw error;
+    }
+  },
+
+  async deleteSession(id) {
+    try {
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token()}`,
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao excluir sessão:", error);
+      throw error;
+    }
+  },
+};
+
+export default sessionService;

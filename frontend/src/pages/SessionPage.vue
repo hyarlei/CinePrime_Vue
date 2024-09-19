@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import sessionService from "../service/sessionService";
 import SessionForm from "../components/SessionForm.vue";
 
 export default {
@@ -68,14 +68,7 @@ export default {
     },
     async fetchSessions() {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3333/session", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.sessions = response.data;
+        this.sessions = await sessionService.fetchSessions();
       } catch (error) {
         console.error("Erro ao buscar sessões:", error);
       }
@@ -108,27 +101,11 @@ export default {
       session.atualTicketsQtd = session.maxTicketsQtd;
 
       try {
-        const token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
-
-        console.log("Dados da sessão antes do envio:", session);
-
         if (this.isEdit) {
-          await axios.put(
-            `http://localhost:3333/session/${session.id}`,
-            session,
-            { headers }
-          );
+          await sessionService.editSession(session.id, session);
         } else {
-          const response = await axios.post(
-            "http://localhost:3333/session",
-            session,
-            { headers }
-          );
-          this.sessions.push(response.data);
+          const newSession = await sessionService.addSession(session);
+          this.sessions.push(newSession);
         }
         this.cancelEdit();
         this.fetchSessions();
@@ -136,16 +113,10 @@ export default {
         console.error("Erro ao salvar sessão:", error);
       }
     },
+
     async deleteSession(id) {
       try {
-        const token = localStorage.getItem("token");
-
-        await axios.delete(`http://localhost:3333/session/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await sessionService.deleteSession(id);
         this.fetchSessions();
       } catch (error) {
         console.error("Erro ao excluir sessão:", error);

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import roomService from "../service/roomService";
 import RoomForm from "../components/RoomForm.vue";
 
 export default {
@@ -55,14 +55,7 @@ export default {
   methods: {
     async fetchRooms() {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3333/room", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.rooms = response.data;
+        this.rooms = await roomService.fetchRooms();
       } catch (error) {
         console.error("Erro ao buscar salas:", error);
       }
@@ -86,23 +79,11 @@ export default {
 
     async saveRoom(room) {
       try {
-        const token = localStorage.getItem("token");
-
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
         if (this.isEdit) {
-          await axios.put(`http://localhost:3333/room/${room.id}`, room, {
-            headers,
-          });
+          await roomService.editRoom(room.id, room);
         } else {
-          const response = await axios.post(
-            "http://localhost:3333/room",
-            room,
-            { headers }
-          );
-          this.rooms.push(response.data);
+          const newRoom = await roomService.addRoom(room);
+          this.rooms.push(newRoom);
         }
         this.cancelEdit();
         this.fetchRooms();
@@ -113,14 +94,7 @@ export default {
 
     async deleteRoom(id) {
       try {
-        const token = localStorage.getItem("token");
-
-        await axios.delete(`http://localhost:3333/room/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await roomService.deleteRoom(id);
         this.fetchRooms();
       } catch (error) {
         console.error("Erro ao excluir sala:", error);
@@ -132,6 +106,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style scoped>

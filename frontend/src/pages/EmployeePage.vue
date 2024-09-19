@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import employeeService from "../service/employeeService";
 import EmployeeForm from "../components/EmployeeForm.vue";
 
 export default {
@@ -63,18 +63,12 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3333/employee", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.employees = response.data;
+        this.employees = await employeeService.fetchEmployees();
       } catch (error) {
         console.error("Erro ao buscar funcionários:", error);
       }
     },
+
     addEmployee() {
       this.showForm = true;
       this.isEdit = false;
@@ -87,72 +81,37 @@ export default {
         password: "",
       };
     },
+
     editEmployee(employee) {
       this.showForm = true;
       this.isEdit = true;
       this.currentEmployee = { ...employee };
     },
+
     async saveEmployee(employee) {
       try {
-        const token = localStorage.getItem("token");
-
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
-
-        console.log("Dados do funcionário:", employee);
-
         if (this.isEdit) {
-          await axios.put(
-            `http://localhost:3333/employee/${employee.id}`,
-            employee,
-            { headers }
-          );
+          await employeeService.editEmployee(employee.id, employee);
         } else {
-          const response = await axios.post(
-            "http://localhost:3333/employee",
-            employee,
-            { headers }
-          );
-
-          if (response.data.message === "Sem autorização") {
-            console.error("Erro: Sem autorização para criar funcionário");
-          } else {
-            if (Array.isArray(this.employees)) {
-              this.employees.push(response.data);
-            } else {
-              console.error("Erro: employees não é um array");
-            }
-          }
+          const newEmployee = await employeeService.addEmployee(employee);
+          this.employees.push(newEmployee);
         }
-
         this.cancelEdit();
         this.fetchEmployees();
       } catch (error) {
-        if (error.response) {
-          console.error("Erro na resposta:", error.response.data);
-        } else if (error.request) {
-          console.error("Erro na solicitação:", error.request);
-        } else {
-          console.error("Erro ao configurar a solicitação:", error.message);
-        }
+        console.error("Erro ao salvar funcionário:", error);
       }
     },
+
     async deleteEmployee(id) {
       try {
-        const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:3333/employee/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await employeeService.deleteEmployee(id);
         this.fetchEmployees();
       } catch (error) {
         console.error("Erro ao excluir funcionário:", error);
       }
     },
+
     cancelEdit() {
       this.showForm = false;
     },

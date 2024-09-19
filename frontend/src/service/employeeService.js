@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3333/room";
+const API_URL = "http://localhost:3333/employee";
 
 const token = () => localStorage.getItem("token");
 
-const roomService = {
-  async fetchRooms() {
+const employeeService = {
+  async fetchEmployees() {
     try {
       const response = await axios.get(API_URL, {
         headers: {
@@ -15,14 +15,14 @@ const roomService = {
       });
       return response.data;
     } catch (error) {
-      console.error("Erro ao buscar salas:", error);
+      console.error("Erro ao buscar funcionários:", error);
       throw error;
     }
   },
 
-  async addRoom(room) {
+  async addEmployee(employee) {
     try {
-      const response = await axios.post(API_URL, room, {
+      const response = await axios.post(API_URL, employee, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token()}`,
@@ -30,26 +30,26 @@ const roomService = {
       });
       return response.data;
     } catch (error) {
-      console.error("Erro ao adicionar sala:", error);
+      console.error("Erro ao adicionar funcionário:", error);
       throw error;
     }
   },
 
-  async editRoom(id, room) {
+  async editEmployee(id, employee) {
     try {
-      await axios.put(`${API_URL}/${id}`, room, {
+      await axios.put(`${API_URL}/${id}`, employee, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token()}`,
         },
       });
     } catch (error) {
-      console.error("Erro ao editar sala:", error);
+      console.error("Erro ao editar funcionário:", error);
       throw error;
     }
   },
 
-  async deleteRoom(id) {
+  async deleteEmployee(id) {
     try {
       await axios.delete(`${API_URL}/${id}`, {
         headers: {
@@ -58,10 +58,10 @@ const roomService = {
         },
       });
     } catch (error) {
-      console.error("Erro ao excluir sala:", error);
+      console.error("Erro ao excluir funcionário:", error);
       throw error;
     }
   },
 };
 
-export default roomService;
+export default employeeService;
