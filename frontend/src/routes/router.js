@@ -9,7 +9,7 @@ import MoviesPage from "@/pages/MoviesPage.vue";
 import RoomPage from "@/pages/RoomPage.vue";
 import SessionPage from "@/pages/SessionPage.vue";
 import TicketPurchasePage from '../pages/TicketPurchasePage.vue';
-import MyPurchasesPage from '../pages/MyPurchasesPage.vue'; // Importando a página de Minhas Compras
+import MyPurchasesPage from '../pages/MyPurchasesPage.vue';
 import NotFoundPage from "@/pages/NotFoundPage.vue";
 
 console.log('User authenticated:', store.getters.isAuthenticated);

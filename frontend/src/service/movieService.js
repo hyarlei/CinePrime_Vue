@@ -1,4 +1,3 @@
-// src/service/movieService.js
 import apiClient from "../api/axiosConfig";
 import { API_KEY } from "../api/config";
 
