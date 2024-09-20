@@ -61,12 +61,21 @@ export default {
       if (this.todosPreenchidos) {
         try {
           await this.login({ email: this.email, password: this.senha });
-
           this.$router.push("/");
         } catch (error) {
-          this.mensagemErro =
-            "Falha no login: " +
-            (error.response?.data.message || error.message);
+          if (error.response) {
+            if (error.response.status === 401) {
+              this.mensagemErro = "E-mail ou senha incorretos.";
+            } else if (error.response.status === 404) {
+              this.mensagemErro = "Usuário não encontrado.";
+            } else {
+              this.mensagemErro =
+                "Falha no login: " +
+                (error.response.data.message || error.message);
+            }
+          } else {
+            this.mensagemErro = "Erro de conexão. Tente novamente.";
+          }
         }
       } else {
         this.mensagemErro = "Por favor, preencha todos os campos.";

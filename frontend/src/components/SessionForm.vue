@@ -26,14 +26,18 @@
         <label for="time">Horário:</label>
         <input v-model="formattedTime" type="time" required />
       </div>
-      <button class="actions" type="submit">{{ isEdit ? "Atualizar" : "Adicionar" }}</button>
-      <button class="actions" @click="$emit('cancel')" type="button">Cancelar</button>
+      <button class="actions" type="submit">
+        {{ isEdit ? "Atualizar" : "Adicionar" }}
+      </button>
+      <button class="actions" @click="$emit('cancel')" type="button">
+        Cancelar
+      </button>
     </form>
   </div>
 </template>
 
 <script>
-import { fetchRooms } from "@/service/roomService";
+import roomService from "../service/roomService";
 import { fetchPopularMovies } from "../service/movieService";
 
 export default {
@@ -76,7 +80,6 @@ export default {
     },
   },
   watch: {
-    // Atualiza a quantidade de ingressos disponíveis automaticamente
     "localSession.maxTicketsQtd"(newValue) {
       this.localSession.atualTicketsQtd = newValue;
     },
@@ -88,18 +91,20 @@ export default {
       console.error("Erro ao carregar filmes:", error);
     }
 
-    try {
-      this.rooms = await fetchRooms();
-    } catch (error) {
-      console.error("Erro ao carregar salas:", error);
-    }
+    this.fetchRooms();
 
-    // Se estiver editando, carregar os valores corretos
     if (this.isEdit && this.localSession.idRoom) {
       this.updateMaxTicketsQtd();
     }
   },
   methods: {
+    async fetchRooms() {
+      try {
+        this.rooms = await roomService.fetchRooms();
+      } catch (error) {
+        console.error("Erro ao buscar salas:", error);
+      }
+    },
     updateMaxTicketsQtd() {
       const selectedRoom = this.rooms.find(
         (room) => room.id === this.localSession.idRoom

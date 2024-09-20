@@ -13,7 +13,9 @@
     <div v-if="sessions.length">
       <div v-for="session in sessions" :key="session.id" class="session-item">
         <p><strong>Filme:</strong> {{ session.movieTitle }}</p>
-        <p><strong>Sala:</strong> Sala {{ session.idRoom }}</p>
+        <p>
+          <strong>Sala:</strong> Sala {{ session.idRoom || "Indisponível" }}
+        </p>
         <p><strong>Horário:</strong> {{ formatTime(session.dateTime) }}</p>
         <p><strong>Ingressos Atuais:</strong> {{ session.atualTicketsQtd }}</p>
         <p>
@@ -66,9 +68,11 @@ export default {
       const minutes = date.getMinutes().toString().padStart(2, "0");
       return `${hours}:${minutes}`;
     },
+
     async fetchSessions() {
       try {
-        this.sessions = await sessionService.fetchSessions();
+        const response = await sessionService.fetchSessions();
+        this.sessions = response;
       } catch (error) {
         console.error("Erro ao buscar sessões:", error);
       }
@@ -90,6 +94,11 @@ export default {
       this.showForm = true;
       this.isEdit = true;
       this.currentSession = { ...session };
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
 
     async saveSession(session) {

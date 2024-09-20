@@ -9,6 +9,8 @@
         @save="saveEmployee"
         @cancel="cancelEdit"
       />
+      <!-- Exibe a mensagem de erro -->
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
     <div v-if="employees.length">
       <div
@@ -55,6 +57,7 @@ export default {
         email: "",
         password: "",
       },
+      errorMessage: "",
     };
   },
   created() {
@@ -63,7 +66,8 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        this.employees = await employeeService.fetchEmployees();
+        const employeesData = await employeeService.fetchEmployees();
+        this.employees = Array.isArray(employeesData) ? employeesData : [];
       } catch (error) {
         console.error("Erro ao buscar funcionários:", error);
       }
@@ -80,12 +84,19 @@ export default {
         email: "",
         password: "",
       };
+      this.errorMessage = "";
     },
 
     editEmployee(employee) {
       this.showForm = true;
       this.isEdit = true;
       this.currentEmployee = { ...employee };
+      this.errorMessage = "";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
 
     async saveEmployee(employee) {
@@ -97,9 +108,14 @@ export default {
           this.employees.push(newEmployee);
         }
         this.cancelEdit();
-        this.fetchEmployees();
+        await this.fetchEmployees();
       } catch (error) {
-        console.error("Erro ao salvar funcionário:", error);
+        if (error.response && error.response.data.message === "CPF já existe") {
+          this.errorMessage = "Erro: O CPF informado já existe no sistema.";
+        } else {
+          console.error("Erro ao salvar funcionário:", error);
+          this.errorMessage = "Erro ao salvar funcionário. Tente novamente.";
+        }
       }
     },
 
@@ -114,6 +130,7 @@ export default {
 
     cancelEdit() {
       this.showForm = false;
+      this.errorMessage = "";
     },
   },
 };
@@ -176,5 +193,11 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
 }
 </style>

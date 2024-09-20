@@ -110,7 +110,10 @@ export default {
             password: this.senha,
           };
 
-          const response = await axios.post("http://localhost:3333/user", userData);
+          const response = await axios.post(
+            "http://localhost:3333/user",
+            userData
+          );
 
           if (response.status === 201) {
             alert("Usuário cadastrado com sucesso!");
@@ -129,10 +132,15 @@ export default {
           }
         } catch (error) {
           console.error("Erro na requisição:", error.response);
-          if (error.response && error.response.data && error.response.data.message) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
             this.mensagemErro = error.response.data.message;
           } else {
-            this.mensagemErro = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
+            this.mensagemErro =
+              "Erro ao cadastrar usuário. Tente novamente mais tarde.";
           }
         }
       } else {

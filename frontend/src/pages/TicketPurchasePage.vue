@@ -14,9 +14,9 @@
           {{ formatSessionTime(session.dateTime) }} - Sala {{ session.idRoom }}
         </option>
       </select>
-
+<!-- 
       <label for="quantity">Quantidade de Ingressos:</label>
-      <input type="number" v-model="quantity" min="1" required />
+      <input type="number" v-model="quantity" min="1" required /> -->
 
       <label for="type">Tipo de Ingresso:</label>
       <select v-model="ticketType" required>
@@ -31,7 +31,7 @@
 
 <script>
 import { fetchMovieDetails } from "@/service/movieService";
-import { fetchSessions } from "@/service/sessionService";
+import sessionService from "../service/sessionService";
 import api from "../api/Api";
 
 export default {
@@ -59,8 +59,7 @@ export default {
   async created() {
     await this.fetchMovieDetails();
     try {
-      this.sessions = await fetchSessions();
-      console.log(this.sessions);
+      this.fetchSessions();
     } catch (error) {
       console.error("Erro ao carregar salas:", error);
     }
@@ -74,6 +73,16 @@ export default {
         console.error("Erro ao buscar detalhes do filme:", error);
       }
     },
+
+    async fetchSessions() {
+      try {
+        const response = await sessionService.fetchSessions();
+        this.sessions = response;
+      } catch (error) {
+        console.error("Erro ao buscar sessões:", error);
+      }
+    },
+
     async submitForm() {
       try {
         const selectedSession = this.sessions.find(
@@ -84,13 +93,19 @@ export default {
           alert("Sessão não encontrada.");
           return;
         }
-
-        if (selectedSession.atualTicketsQtd < this.quantity) {
-          alert("Ingressos insuficientes disponíveis.");
-          return;
-        }
+        // Adicionando log para depuração
+        console.log(
+          "Quantidade atual antes da subtração:",
+          selectedSession.atualTicketsQtd
+        );
+        console.log("Quantidade de ingressos a ser subtraída:", this.quantity);
 
         selectedSession.atualTicketsQtd -= this.quantity;
+
+        console.log(
+          "Quantidade atual após a subtração:",
+          selectedSession.atualTicketsQtd
+        );
 
         console.log(selectedSession.atualTicketsQtd);
         const token = localStorage.getItem("token");
@@ -98,11 +113,28 @@ export default {
         await api.put(
           `/session/${this.selectedSessionId}`,
           {
-            atualTicketsQtd: selectedSession.atualTicketsQtd,
+            atualTicketsQtd: selectedSession.atualTicketsQtd - 1,
             movieTitle: selectedSession.movieTitle,
             idRoom: selectedSession.idRoom,
             maxTicketsQtd: selectedSession.maxTicketsQtd,
             dateTime: selectedSession.dateTime,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const userId = parseInt(localStorage.getItem("userId"), 10);
+
+        await api.post(
+          `/ticket`,
+          {
+            idUser: userId,
+            idSession: this.selectedSessionId,
+            type: this.ticketType,
           },
           {
             headers: {

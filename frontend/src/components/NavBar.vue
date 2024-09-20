@@ -17,7 +17,23 @@
         <router-link class="link" to="/sessoes">Sessões</router-link>
       </li>
     </ul>
-    <button @click="toggleAuth" class="btn-login">{{ isAuthenticated ? 'Logout' : 'Login' }}</button>
+
+    <div v-if="isAuthenticated" class="dropdown">
+      <button class="dropdown-toggle" @click="toggleDropdown">
+        <span class="material-symbols-outlined"> account_circle </span>
+        Olá, {{ getFirstName(userName) }}
+      </button>
+      <div v-if="dropdownVisible" class="dropdown-menu">
+        <router-link class="dropdown-item" to="/minhas-compras"
+          >Minhas Compras</router-link
+        >
+        <button class="dropdown-item" @click="logoutUser">
+          <span class="material-symbols-outlined"> logout </span>
+        </button>
+      </div>
+    </div>
+
+    <button v-else @click="login" class="btn-login">Login</button>
   </nav>
 </template>
 
@@ -26,18 +42,50 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "NavBar",
+  data() {
+    return {
+      dropdownVisible: false,
+    };
+  },
   computed: {
-    ...mapGetters(["userRole", "isAuthenticated"]),
+    ...mapGetters(["userRole", "isAuthenticated", "userName"]),
   },
   methods: {
     ...mapActions(["logout"]),
-    toggleAuth() {
-      if (this.isAuthenticated) {
-        this.logout();
-        this.$router.push('/login');
-      } else {
-        this.$router.push('/login');
+
+    toggleDropdown() {
+      this.dropdownVisible = !this.dropdownVisible;
+    },
+
+    login() {
+      this.$router.push("/login");
+    },
+
+    logoutUser() {
+      this.logout();
+      this.$router.push("/login");
+      this.dropdownVisible = false;
+    },
+
+    getFirstName(fullName) {
+      return fullName.split(" ")[0];
+    },
+
+    handleOutsideClick(event) {
+      if (!this.$el.contains(event.target)) {
+        this.dropdownVisible = false;
       }
+    },
+  },
+  mounted() {
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+  beforeUnmount() {
+    document.removeEventListener("click", this.handleOutsideClick);
+  },
+  watch: {
+    $route() {
+      this.dropdownVisible = false;
     },
   },
 };
@@ -68,24 +116,12 @@ export default {
   gap: 64px;
 }
 
-.navbar-links li {
-  margin-left: 0;
-}
-
 .navbar-links .link {
   text-align: center;
   text-decoration: none;
   color: white;
   font-size: 16px;
   transition: color 0.3s;
-}
-
-.navbar-links li[data-v-4295d220] {
-  margin: 0;
-}
-
-.navbar-links li {
-  margin-left: 20px;
 }
 
 .navbar-links .link:hover {
@@ -105,5 +141,48 @@ export default {
 
 .btn-login:hover {
   background-color: #0056b3;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  padding: 10px 0;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  text-align: left;
+  text-decoration: none;
+  background-color: white;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown-item:hover {
+  background-color: #f2f2f2;
 }
 </style>

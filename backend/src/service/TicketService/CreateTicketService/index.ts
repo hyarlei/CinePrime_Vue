@@ -27,9 +27,9 @@ export class CreateTicketService {
             if (!sessionExists) {
                 return res.status(400).json({ message: 'Sessão não existe' });
             }
-            if (!userExists) {
-                return res.status(400).json({ message: 'Usuário não existe' });
-            }
+            // if (!userExists) {
+            //     return res.status(400).json({ message: 'Usuário não existe' });
+            // }
 
             if (sessionExists.atualTicketsQtd === sessionExists.maxTicketsQtd) {
                 return res.status(400).json({ message: 'Sessão lotada' });

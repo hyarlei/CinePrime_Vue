@@ -49,6 +49,7 @@ export default {
 
 <style scoped>
 .cards {
+  margin-top: 100px;
   min-height: 100%;
   display: flex;
   justify-content: center;

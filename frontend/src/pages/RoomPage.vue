@@ -75,6 +75,11 @@ export default {
       this.showForm = true;
       this.isEdit = true;
       this.currentRoom = { ...room };
+      
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
 
     async saveRoom(room) {
@@ -106,7 +111,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style scoped>
