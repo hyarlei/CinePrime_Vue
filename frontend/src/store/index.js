@@ -73,7 +73,7 @@ const store = createStore({
       const userName = localStorage.getItem("userName");
       const userId = localStorage.getItem("userId")
       console.log("Initializing store with:", token, role, userName, userId);
-
+      
       if (token) {
         commit("setToken", token);
       }

@@ -24,9 +24,7 @@ export class CreateUserController {
 		try {
 			const result = await createUserService.execute({ nome, cpf, telefone, email, password }, req, res);
 
-			const { token, user }: any = result;
-
-			return res.status(201).json({ token, user });
+			return result;
 		} catch (error) {
 			return res.status(500).json({ message: 'Erro ao cadastrar usuário.', error });
 		}

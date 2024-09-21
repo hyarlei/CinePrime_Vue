@@ -131,7 +131,10 @@ export default {
             this.mensagemErro = "Erro ao cadastrar usuário.";
           }
         } catch (error) {
-          console.error("Erro na requisição:", error.response);
+          console.error(
+            "Erro na requisição:",
+            error.response ? error.response.data : error
+          );
           if (
             error.response &&
             error.response.data &&

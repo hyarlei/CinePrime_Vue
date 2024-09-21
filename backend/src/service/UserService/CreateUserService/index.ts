@@ -55,7 +55,6 @@ export class CreateUserService {
 		const cpfRegex = /^\d{11}$/;
 		if (!cpfRegex.test(cpf) || !this.validateCpf(cpf)) {
 			//colocar o ||
-
 			return res.status(400).json({ message: 'CPF inválido, preencha um CPF valido com 11 números, sem pontuações ou espaços' });
 		}
 		try {
@@ -69,15 +68,18 @@ export class CreateUserService {
 				return res.status(400).json({ message: 'Usuário já existe' });
 			}
 
+
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			if (!emailRegex.test(email)) {
 				return res.status(400).json({ message: 'Formato de email inválido, siga o formato user@mail.com' });
 			}
 
+
 			const telefoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
 			if (!telefoneRegex.test(telefone)) {
 				return res.status(400).json({ message: 'Formato de telefone inválido, siga exatemente o formato (85) 99292-9292' });
 			}
+
 
 			const emailExiste = await prisma.user.findFirst({
 				where: {
@@ -88,6 +90,7 @@ export class CreateUserService {
 			if (emailExiste) {
 				return res.status(400).json({ message: 'Email já existe' });
 			}
+
 
 			//const hashedPassword = await bcrypt.hash(password, 10); // Aplicar hash na senha
 
@@ -123,8 +126,8 @@ export class CreateUserService {
 				{ expiresIn: '1h' },
 			);
 
-			// Retorna o token e o usuário
-			return { token, user };
+			// Retorna o token e o Usuário
+			return res.status(201).json({ token, user });
 			// return res.status(201).json(user);
 		} catch (error: any) {
 			return res.status(500).json({ message: error.message });
