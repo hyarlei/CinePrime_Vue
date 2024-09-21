@@ -35,6 +35,7 @@ export class UserAuthenticationService {
                     email: user.email,
                     password: user.password,
                     isAdmin: user.isAdmin,
+                    profile: user.profile,
                 },
                 process.env.JWT_SECRET!,
             );

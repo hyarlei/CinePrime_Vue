@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import { jwtDecode } from 'jwt-decode'
 import axios from "axios";
 
 const store = createStore({
@@ -38,18 +39,17 @@ const store = createStore({
         console.log("Response from login:", response.data);
 
         const token = response.data.user.token;
-        const role = response.data.user.profile;
         const userName = response.data.user.nome;
         const userId = response.data.user.id
+        const role = jwtDecode(token).profile;
 
         if (token) {
           commit("setToken", token);
-          commit("setRole", role);
           commit("setUserName", userName);
           commit("setUserId", userId)
+          commit("setRole", role)
 
           localStorage.setItem("token", token);
-          localStorage.setItem("role", role);
           localStorage.setItem("userName", userName);
           localStorage.setItem("userId", userId);
         } else {
@@ -63,13 +63,13 @@ const store = createStore({
     logout({ commit }) {
       commit("clearToken");
       localStorage.removeItem("token");
-      localStorage.removeItem("role");
       localStorage.removeItem("userName");
       localStorage.removeItem("userId");
     },
+    
     initializeStore({ commit }) {
       const token = localStorage.getItem("token");
-      const role = localStorage.getItem("role");
+      const role = token ? jwtDecode(token).profile : "client";
       const userName = localStorage.getItem("userName");
       const userId = localStorage.getItem("userId")
       console.log("Initializing store with:", token, role, userName, userId);
