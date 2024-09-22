@@ -38,12 +38,11 @@ Liste as principais entidades do sistema.
 
 ## Principais funcionalidades da aplicação
 
-- **Listar Filmes**: Exibir uma lista com todos os filmes, incluindo o gênero e a classificação indicativa.
+- **Listar Filmes**: Exibir uma lista com todos os filmes.
 - **Cadastrar Sessão**: Permitir que o usuário cadastre uma sessão para um filme, informando o horário, a quantidade de ingressos disponíveis e o valor do ingresso.
-- **Listar Sessões Disponíveis**: Exibir uma lista com todas as sessões disponíveis, incluindo o filme, o horário, a quantidade de ingressos e o valor.
+- **Listar Sessões Disponíveis**: Exibir uma lista com todas as sessões disponíveis, incluindo o filme, o horário, a quantidade de ingressos.
 - **Comprar Ingresso**: Permitir que o comprador selecione uma sessão e compre ingressos informando seus dados pessoais.
 - **Visualizar Ingressos Comprados**: Exibir a lista de ingressos comprados.
-- **Cancelar Compra**: Permitir que o comprador cancele a compra de um ingresso.
 
 ## Tecnologias e frameworks utilizados
 

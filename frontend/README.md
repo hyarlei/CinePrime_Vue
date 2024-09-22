@@ -91,6 +91,8 @@ Aqui estão as principais tecnologias utilizadas no desenvolvimento do frontend:
 - **Vue Router** - Gerenciamento de rotas da aplicação.
 - **Vuex** - Gerenciamento de estado centralizado.
 - **Axios** - Cliente HTTP para integração com APIs externas.
+- **jwt-decode**: Para decodificação de tokens JWT no frontend
+- **Google Material Icons**: Ícones utilizados para melhorar a interface do usuário
 
 ## Licença
 
