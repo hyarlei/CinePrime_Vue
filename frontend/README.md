@@ -61,10 +61,10 @@ Antes de rodar o projeto, você precisa configurar algumas variáveis de ambient
 2. Edite o arquivo `.env` e adicione as variáveis de ambiente apropriadas:
 
    ```
-   VUE_APP_API_BASE_URL=http://localhost:3333
+   VUE_BACKEND_PORT=3333
    ```
 
-   O `VUE_APP_API_BASE_URL` deve apontar para o endereço da API do backend.
+   O `VUE_BACKEND_PORT` deve apontar para o endereço da API do backend.
 
 ## Rodando o Projeto
 

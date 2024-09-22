@@ -59,6 +59,9 @@ JWT_SECRET="sua_chave_secreta_aqui"
 
 **Nota:** Renomeie o arquivo `.env.example` para `.env` e configure as variáveis conforme necessário.
 
+## Cadastro de Administrador
+A aplicação possui um único administrador definido pelo CPF. O primeiro usuário criado no sistema, que corresponde ao valor armazenado na variável de ambiente CPF_CINEMA_OWNER, será o administrador. Todos os outros usuários terão permissões limitadas. Certifique-se de definir corretamente o CPF do administrador no arquivo .env.
+
 ## Executar Migrações
 
 Para configurar o banco de dados e criar as tabelas necessárias, execute as migrações:
