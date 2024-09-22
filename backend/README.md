@@ -28,10 +28,10 @@ Siga os passos abaixo para instalar e configurar o projeto na sua máquina local
 git clone https://github.com/hyarlei/CinePrime_Vue.git
 ```
 
-Acesse o diretório do projeto:
+Já no arquivo raiz do projeto, acesse o diretório do backend:
 
 ```bash
-cd CinePrime_Vue
+cd .\backend\
 ```
 
 ## Configuração
@@ -60,6 +60,7 @@ JWT_SECRET="sua_chave_secreta_aqui"
 **Nota:** Renomeie o arquivo `.env.example` para `.env` e configure as variáveis conforme necessário.
 
 ## Cadastro de Administrador
+
 A aplicação possui um único administrador definido pelo CPF. O primeiro usuário criado no sistema, que corresponde ao valor armazenado na variável de ambiente CPF_CINEMA_OWNER, será o administrador. Todos os outros usuários terão permissões limitadas. Certifique-se de definir corretamente o CPF do administrador no arquivo .env.
 
 ## Executar Migrações
@@ -75,6 +76,15 @@ ou
 ```bash
 yarn prisma migrate dev
 ```
+
+## Instruções para Respostas Durante a Migração
+
+"Enter a name for the new migration": Dê um nome descritivo para a migração, como inicial ou setup-tabelas.
+
+"Would you like to apply this migration? (y/n)": Responda y para aplicar as migrações.
+
+"Do you want to create the database? (y/n)": Responda y se o banco de dados ainda não existir.
+Após essas respostas, o Prisma configurará o banco de dados e as tabelas estarão prontas.
 
 ## Rodando o servidor
 

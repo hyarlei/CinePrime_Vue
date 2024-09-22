@@ -22,21 +22,21 @@ Antes de iniciar, você precisará ter as seguintes ferramentas instaladas em su
 
 ## Instalação
 
-Siga os passos abaixo para instalar e configurar o projeto na sua máquina local.
+Siga os passos abaixo para instalar e configurar o projeto na sua máquina local:
 
-1. Clone o repositório do frontend:
+```bash
+git clone https://github.com/hyarlei/CinePrime_Vue.git
+```
 
-   ```bash
-   git clone https://github.com/hyarlei/CinePrime_Vue.git
-   ```
-
-2. Acesse o diretório do frontend:
+Já no arquivo raiz do projeto, acesse o diretório do frontend:
 
    ```bash
-   cd CinePrime_Vue/frontend
+   cd .\frontend\
    ```
 
-3. Instale as dependências necessárias:
+## Configuração
+
+Instale as dependências necessárias com o gerenciador de pacotes de sua preferência (npm ou yarn):
 
    ```bash
    npm install
@@ -47,24 +47,6 @@ Siga os passos abaixo para instalar e configurar o projeto na sua máquina local
    ```bash
    yarn install
    ```
-
-## Configuração
-
-Antes de rodar o projeto, você precisa configurar algumas variáveis de ambiente.
-
-1. Copie o arquivo de exemplo `.env.example` para `.env`:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Edite o arquivo `.env` e adicione as variáveis de ambiente apropriadas:
-
-   ```
-   VUE_BACKEND_PORT=3333
-   ```
-
-   O `VUE_BACKEND_PORT` deve apontar para o endereço da API do backend.
 
 ## Rodando o Projeto
 
