@@ -46,7 +46,7 @@ Liste as principais entidades do sistema.
 
 ## Tecnologias e frameworks utilizados
 
-- **Frontend**: VueJS v3.0, Vue-Router, Axios.
+- **Frontend**: VueJS v3.0, Vue-Router, Vuex, jwt-decode, Axios e Google Material Icons.
 - **Backend**: Node.js, Express, TypeScript, Prisma ORM, JWT.
 - **Banco de Dados**: PostgreSQL.
 
