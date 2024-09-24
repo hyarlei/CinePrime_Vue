@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.VUE_BACKEND_PORT || 'https://cineprime-vue.onrender.com';
+const API_URL = "http://localhost:3333/session";
 
 const token = () => localStorage.getItem("token");
 
