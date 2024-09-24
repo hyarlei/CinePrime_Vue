@@ -1,12 +1,14 @@
 import axios from "axios";
 
-// const backEndPort = import.meta.env.VUE_BACKEND_PORT;
-const backEndPort = 3333;
+// Pegue a URL do backend a partir das variáveis de ambiente
+const API_URL = process.env.VUE_BACKEND_PORT || 'https://cineprime-vue.onrender.com';
 
 const api = axios.create({
-  baseURL: `http://localhost:${backEndPort}`,
+  baseURL: `${API_URL}/api`,  // Certifique-se de que o backend responde nesta rota
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000,  // 10 segundos de timeout
 });
-
-console.log(`Conectado com o back-end em: http://localhost:${backEndPort}`);
 
 export default api;
