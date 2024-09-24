@@ -5,7 +5,7 @@ import { routes } from './routes/routes';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.VUE_BACKEND_PORT || 3333;
+const PORT = process.env.BACKEND_PORT || 3333;
 
 app.use(cors({
 	origin: 'https://cine-prime-vue.vercel.app'  // Substitua pela URL real do frontend

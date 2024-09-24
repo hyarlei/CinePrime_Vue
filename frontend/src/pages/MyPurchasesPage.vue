@@ -48,7 +48,7 @@ export default {
     async fetchTickets() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}/ticket`, {
+        const response = await axios.get(`${process.env.VUE_BACKEND_PORT}/ticket`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
