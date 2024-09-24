@@ -111,7 +111,7 @@ export default {
           };
 
           const response = await axios.post(
-            "http://localhost:3333/user",
+            `${process.env.VUE_BACKEND_PORT}/user`,
             userData
           );
 
