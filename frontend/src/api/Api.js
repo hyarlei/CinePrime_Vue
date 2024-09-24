@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// const backEndPort = import.meta.env.VUE_BACKEND_PORT;
+// Pegue a URL do backend a partir das variáveis de ambiente
 const API_URL = process.env.VUE_BACKEND_PORT || 'https://seu-backend-na-render.com';
 
 const api = axios.create({
-  baseURL: `${API_URL}/api`,
+  baseURL: `${API_URL}/api`,  // Certifique-se de que o backend responde nesta rota
   headers: {
     'Content-Type': 'application/json',
   },
