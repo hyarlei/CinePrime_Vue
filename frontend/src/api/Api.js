@@ -1,12 +1,14 @@
 import axios from "axios";
 
 // const backEndPort = import.meta.env.VUE_BACKEND_PORT;
-const backEndPort = 3333;
+const API_URL = process.env.VUE_BACKEND_PORT || 'https://seu-backend-na-render.com';
 
 const api = axios.create({
-  baseURL: `http://localhost:${backEndPort}`,
+  baseURL: `${API_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000,  // 10 segundos de timeout
 });
-
-console.log(`Conectado com o back-end em: http://localhost:${backEndPort}`);
 
 export default api;
