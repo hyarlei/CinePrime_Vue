@@ -1,100 +1,139 @@
-<h1 align="center">Cine🍿Prime - Sistema de Gestão de Cinemas</h1>
+# CinePrime - Aplicação de Gestão de Cinemas
 
-O projeto CinePrime é uma aplicação destinada à gestão de cinemas, permitindo aos usuários realizar diversas operações relacionadas à exibição de filmes e venda de ingressos. A aplicação é composta por um **frontend** desenvolvido em Vue.js e um **backend** em Node.js com Express.
+## Sobre o Projeto
 
-## Índice
+O CinePrime é uma aplicação web completa para gestão de cinemas, permitindo que usuários visualizem filmes disponíveis, comprem ingressos e que administradores gerenciem salas, sessões e funcionários.
 
-- [Membros da equipe](#membros-da-equipe)
-- [Papéis de usuários](#papéis-ou-tipos-de-usuário-da-aplicação)
-- [Entidades principais](#entidades-ou-tabelas-do-sistema)
-- [Funcionalidades principais](#principais-funcionalidades-da-aplicação)
-- [Tecnologias e frameworks utilizados](#tecnologias-e-frameworks-utilizados)
-- [Estrutura do projeto](#estrutura-do-projeto)
-- [Operações implementadas](#operações-implementadas-para-cada-entidade-da-aplicação)
-- [Rotas da API REST](#rotas-da-api-rest-utilizadas)
-- [Deploy](#deploy)
-- [Licença](#licença)
-
-## Membros da equipe
-
-- 542646, Hyarlei Silva Freitas, Sistema de Informação.
-- 535739, Antonio Victor Cavalcante Rodrigues, Sistema de Informação.
-
-## Papéis ou tipos de usuário da aplicação
-
-- Usuário não registrado
-- Usuário registrado
-- Administrador
-
-## Entidades ou tabelas do sistema
-
-Liste as principais entidades do sistema.
-
-- User
-- Session
-- Room
-- Ticket
-- Employer
-
-## Principais funcionalidades da aplicação
-
-- **Listar Filmes**: Exibir uma lista com todos os filmes.
-- **Cadastrar Sessão**: Permitir que o usuário cadastre uma sessão para um filme, informando o horário, a quantidade de ingressos disponíveis e o valor do ingresso.
-- **Listar Sessões Disponíveis**: Exibir uma lista com todas as sessões disponíveis, incluindo o filme, o horário, a quantidade de ingressos.
-- **Comprar Ingresso**: Permitir que o comprador selecione uma sessão e compre ingressos informando seus dados pessoais.
-- **Visualizar Ingressos Comprados**: Exibir a lista de ingressos comprados.
-
-## Tecnologias e frameworks utilizados
-
-- **Frontend**: VueJS v3.0, Vue-Router, Vuex, jwt-decode, Axios e Google Material Icons.
-- **Backend**: Node.js, Express, TypeScript, Prisma ORM, JWT.
-- **Banco de Dados**: PostgreSQL.
+![Vue](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 
 ## Estrutura do Projeto
 
-A aplicação é dividida entre o frontend e o backend, cada um com seu próprio README e instruções específicas. Veja os detalhes completos de cada parte:
+Este projeto segue uma arquitetura cliente-servidor, onde:
 
-- [Frontend (Vue.js)](./frontend/README.md)
-- [Backend (Node.js)](./backend/README.md)
+- **Frontend**: Desenvolvido com Vue.js
+- **Backend**: API REST desenvolvida com Express.js e TypeScript
+
+### Estrutura de Diretórios
 
 ```
-├── frontend/    # Interface do usuário (Vue.js)
-├── backend/     # API RESTful (Node.js e Express)
-└── README.md    # Documentação principal
+CinePrime_Vue/
+├── backend/            # API REST em Express.js
+│   ├── prisma/         # ORM Prisma (modelos e migrações)
+│   └── src/            # Código fonte do backend
+│       ├── controllers/   # Controladores da API
+│       ├── middleware/    # Middlewares (autenticação, etc.)
+│       ├── routes/        # Rotas da API
+│       └── service/       # Serviços para lógica de negócios
+│
+└── frontend/           # Aplicação Vue.js
+    ├── public/         # Arquivos públicos
+    └── src/            # Código fonte do frontend
+        ├── api/        # Configuração de clientes HTTP
+        ├── assets/     # Recursos estáticos
+        ├── components/ # Componentes Vue reutilizáveis
+        ├── pages/      # Páginas Vue
+        ├── routes/     # Configuração de rotas
+        ├── service/    # Serviços para comunicação com API
+        └── store/      # Gerenciamento de estado global (Vuex)
 ```
 
-## Operações implementadas para cada entidade da aplicação
+## Funcionalidades
 
-| Entidade| Criação | Leitura | Atualização | Remoção |
-| --- | --- | --- | --- | --- |
-| User     |  X  |  X  |  X  |  X  |
-| Movie    |     |  X  |     |     |
-| Session  |  X  |  X  |  X  |  X  |
-| Room     |  X  |  X  |  X  |  X  |
-| Ticket   |  X  |  X  |     |     |
-| Employer |  X  |  X  |  X  |  X  |
+### Para Usuários Comuns
 
-## Rotas da API REST utilizadas
+- Visualizar lista de filmes disponíveis
+- Ver detalhes de filmes específicos
+- Comprar ingressos para sessões
+- Ver histórico de compras
 
-| Método HTTP | URL |
-| --- | --- |
-| POST | /auth |
-| GET | /user |
-| GET | /user/{id} |
-| POST | /user |
-| PUT | /user/{id} |
-| DELETE | /user/{id} |
-...
+### Para Administradores
 
-## Deploy
+- Gerenciar salas de cinema
+- Configurar sessões de filmes
+- Gerenciar funcionários
+- Visualizar todas as transações
 
-- **Frontend**: Para rodar o frontend, veja as instruções no [README do frontend](./frontend/README.md).
-- **Backend**: Para rodar o backend, veja as instruções no [README do backend](./backend/README.md).
+## Tecnologias Utilizadas
+
+### Frontend
+- Vue.js 3
+- Vuex para gerenciamento de estado
+- Vue Router para navegação
+- Axios para requisições HTTP
+
+### Backend
+- Node.js com Express
+- TypeScript para tipagem segura
+- Prisma ORM para acesso ao banco de dados
+- JWT para autenticação
+
+## Como Executar o Projeto
+
+### Pré-requisitos
+- Node.js (v14 ou superior)
+- npm ou yarn
+- SQLite (já configurado no projeto)
+
+### Configuração do Backend
+
+1. Navegue até a pasta do backend:
+   ```bash
+   cd backend
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure as variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Execute as migrações do Prisma:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. Inicie o servidor:
+   ```bash
+   npm run dev
+   ```
+
+### Configuração do Frontend
+
+1. Navegue até a pasta do frontend:
+   ```bash
+   cd frontend
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure as variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run serve
+   ```
+
+5. Acesse a aplicação em: `http://localhost:8080`
+
+## Deployment
+
+O projeto está configurado para deploy na seguinte infraestrutura:
+- **Backend**: [Render](https://render.com)
+- **Frontend**: [Vercel](https://vercel.com)
 
 ## Licença
 
-Este projeto está licenciado sob os termos da licença MIT.
-
----
-
-Dessa forma, o arquivo contém uma visão geral do projeto, informações importantes, e não repete muito o conteúdo dos READMEs específicos.
+Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para mais detalhes.

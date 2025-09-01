@@ -6,12 +6,27 @@ dotenv.config();
 
 const app = express();
 
+// Configuração do CORS
+if (process.env.NODE_ENV === 'development') {
+  // Em ambiente de desenvolvimento, permitimos todas as origens
+  app.use(cors());
+} else {
+  // Em produção, apenas as origens específicas
+  const allowedOrigins = [
+    'https://cine-prime-vue.vercel.app',
+    'http://localhost:8080'
+  ];
 
-app.use(cors({
-	origin: 'https://cine-prime-vue.vercel.app',
-	methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  	credentials: true
-}));
+  if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+  }
+
+  app.use(cors({
+    origin: allowedOrigins,
+    methods: 'GET,POST,PUT,DELETE,OPTIONS,PATCH',
+    credentials: true
+  }));
+}
 
 app.use(express.json());
 

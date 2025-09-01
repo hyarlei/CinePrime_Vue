@@ -1,42 +1,29 @@
 import axios from "axios";
+import { API_KEY } from "./config";
 
-const apiClient = axios.create({
+// Cliente para a API do The Movie Database
+const movieClient = axios.create({
   baseURL: "https://api.themoviedb.org/3",
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 10000,
+  params: {
+    api_key: API_KEY
+  }
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+// Interceptors para tratamento de erro específico para a API de filmes
+movieClient.interceptors.response.use(
+  (response) => response,
   (error) => {
     if (error.response) {
-      if (error.response.status === 401) {
-        console.error("Erro de autenticação. Redirecionando para login...");
-      } else {
-        console.error(`Erro na resposta: ${error.response.status} - ${error.response.statusText}`);
-      }
+      console.error(`Erro na API de filmes: ${error.response.status} - ${error.response.statusText}`);
     } else {
-      console.error("Erro na solicitação:", error.message);
+      console.error("Erro na solicitação à API de filmes:", error.message);
     }
     return Promise.reject(error);
   }
 );
 
-export default apiClient;
+export default movieClient;

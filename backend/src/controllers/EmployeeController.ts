@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { CreateEmployeeService } from "../service/EmployeeService/CreateEmployeeService/index";
-import { DeleteEmployeeService } from "../service/EmployeeService//DeleteCreateEmployeeService/index";
+import { DeleteEmployeeService } from "../service/EmployeeService/DeleteEmployeeService/index";
 import { FindAllEmployeeService } from "../service/EmployeeService/findAllEmployeeService/index";
 import { UpdateEmployeeService } from "../service/EmployeeService/UpdateEmployeeService/index";
 import { FindByIdEmployeeService } from "../service/EmployeeService/findEmployeeByIdService/index";
