@@ -7,15 +7,13 @@
         :key="purchase.id"
         class="purchase-item"
       >
-        <p><strong>Filme:</strong> {{ purchase.session.movieTitle }}</p>
-        <p><strong>Sala:</strong> Sala {{ purchase.session.idRoom }}</p>
+        <p><strong>Filme:</strong> {{ purchase.session?.movieTitle }}</p>
+        <p><strong>Sala:</strong> Sala {{ purchase.session?.room?.id || purchase.session?.idRoom }}</p>
         <p>
-          <strong>Horário:</strong> {{ formatTime(purchase.session.dateTime) }}
+          <strong>Horário:</strong> {{ formatTime(purchase.session?.dateTime) }}
         </p>
-        <!-- <p>
-          <strong>Quantidade de ingressos:</strong>
-          {{ purchase.ticketQuantity }}
-        </p> -->
+        <p><strong>Tipo de ingresso:</strong> {{ purchase.type }}</p>
+        <p><strong>ID do ingresso:</strong> {{ purchase.id }}</p>
       </div>
     </div>
     <div v-else>
@@ -48,14 +46,16 @@ export default {
     async fetchTickets() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3333/user", {
+        // Buscar diretamente os tickets, que incluem as informações da sessão
+        const response = await axios.get("http://localhost:3333/ticket", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
 
-        this.purchases = response.data.filter(purchase => purchase.idUser === this.userId);
+        // Filtrar os tickets do usuário atual
+        this.purchases = response.data.filter(ticket => ticket.idUser === this.userId);
       } catch (error) {
         console.error("Erro ao buscar compras:", error);
       }
@@ -69,13 +69,38 @@ export default {
 .purchase-list {
   padding: 20px;
   min-height: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .purchase-item {
   border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 12px;
-  margin-bottom: 12px;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
   background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.purchase-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.purchase-item p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.purchase-item strong {
+  color: #333;
+  font-weight: 600;
 }
 </style>

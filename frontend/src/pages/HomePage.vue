@@ -14,7 +14,7 @@ export default {
   methods: {
     handleSubmit() {
       alert(
-        `Hyarlei Silva Freitas - 542646\nAntonio Victor Cavalcante Rodrigues - 535739`
+        `Hyarlei Silva Freitas - 542646`
       );
     },
   },
