@@ -1,7 +1,10 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { routes } from './routes/routes';
+import swaggerSpecs from './swagger';
+
 dotenv.config();
 
 const app = express();
@@ -30,6 +33,19 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
+// Configurar o Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+}));
+
+// Endpoint para obter a especificação do Swagger em formato JSON
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpecs);
+});
+
+// Rotas da API
 app.use(routes);
 const PORT = process.env.BACKEND_PORT || 3333;
 app.listen(PORT, () => {

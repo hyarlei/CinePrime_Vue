@@ -6,18 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "migrate": "npx prisma migrate dev"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robertsonasc/cine-prime.git"
+    "url": "git+https://github.com/hyarlei/CinePrime_Vue.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/robertsonasc/cine-prime/issues"
+    "url": "https://github.com/hyarlei/CinePrime_Vue/issues"
   },
-  "homepage": "https://github.com/robertsonasc/cine-prime#readme",
+  "homepage": "https://github.com/hyarlei/CinePrime_Vue#readme",
   "dependencies": {
     "@prisma/client": "^5.4.2",
     "cine-prime": "file:",
@@ -25,6 +26,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
